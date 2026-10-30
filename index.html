@@ -301,12 +301,19 @@ textarea { min-height: 84px; resize: vertical; font-size: 14px; }
 .login h1 { font-size: 30px; line-height: 1.2; }
 .login p { color: var(--muted); }
 .login .btn { min-width: 240px; }
+.logo { overflow: hidden; }
+.logo img { width: 100%; height: 100%; display: block; }
+.calc-out { background: var(--tint); border-radius: 12px; padding: 12px 14px; display: grid; gap: 6px; }
+.calc-out:empty { display: none; }
+.calc-out .r { display: flex; justify-content: space-between; gap: 12px; }
+.calc-out .r b { font-family: var(--font-display); }
+.calc-out .r.big { font-size: 1.08em; }
 </style>
 </head>
 <body>
 <div class="login" id="login">
   <div class="login-card">
-    <span class="logo"><span data-ic="wallet"></span></span>
+    <span class="logo"><img class="logo-img" alt=""></span>
     <h1>টাকার খাতা</h1>
     <p>আয়-ব্যয়, ধার-বাকি আর সঞ্চয়ের হিসাব। লগইন করলে সব লেনদেন আপনার অ্যাকাউন্টে নিরাপদে সেভ থাকবে, ফোন বদলালেও হারাবে না।</p>
     <button type="button" class="btn" id="login-btn" hidden>Google দিয়ে লগইন করুন</button>
@@ -320,7 +327,7 @@ textarea { min-height: 84px; resize: vertical; font-size: 14px; }
   <div class="in">
     <div class="bar-l">
       <button type="button" class="back" id="back" hidden aria-label="পেছনে যান"><span data-ic="back"></span></button>
-      <span class="logo" id="logo"><span data-ic="wallet"></span></span>
+      <span class="logo" id="logo"><img class="logo-img" alt=""></span>
       <div>
         <div class="kicker" id="kicker">ব্যক্তিগত হিসাব</div>
         <h1 id="ptitle">টাকার খাতা</h1>
@@ -366,6 +373,7 @@ textarea { min-height: 84px; resize: vertical; font-size: 14px; }
       <div id="v-budget" class="panel" hidden></div>
       <div id="v-rec" class="panel" hidden></div>
       <div id="v-notes" class="panel" hidden></div>
+      <div id="v-calc" class="panel" hidden></div>
     </main>
 
     <p class="foot">আপনার তথ্য আপনার Google অ্যাকাউন্টের সঙ্গে সার্ভারে সেভ থাকে।</p>
@@ -418,17 +426,50 @@ textarea { min-height: 84px; resize: vertical; font-size: 14px; }
   <form class="sheet" id="loan-form" role="dialog" aria-modal="true" aria-labelledby="loan-title" novalidate>
     <h2 id="loan-title">নতুন ধার-বাকি</h2>
     <div class="types" role="radiogroup" aria-label="ধরন">
-      <div class="opt"><input type="radio" name="ldir" id="l-given" value="given" checked><label class="in" for="l-given">ধার দিলাম (পাবো)</label></div>
-      <div class="opt"><input type="radio" name="ldir" id="l-taken" value="taken"><label class="ex" for="l-taken">ধার নিলাম (দেবো)</label></div>
+      <div class="opt"><input type="radio" name="ldir" id="l-given" value="given" checked><label class="in" for="l-given">দিলাম (পাবো)</label></div>
+      <div class="opt"><input type="radio" name="ldir" id="l-taken" value="taken"><label class="ex" for="l-taken">নিলাম (দেবো)</label></div>
     </div>
+    <div class="field"><label for="l-kind">কিসের বাকি</label><select id="l-kind"><option value="cash">টাকা ধার বা হাওলাত</option><option value="recharge">রিচার্জ বাকি</option></select></div>
     <div class="field"><label for="l-person">কার সাথে</label><input type="text" id="l-person" placeholder="নাম লিখুন" autocomplete="off"></div>
     <div class="field"><label for="l-amount">পরিমাণ (টাকা)</label><input type="text" id="l-amount" class="amt" inputmode="decimal" placeholder="০" autocomplete="off"></div>
-    <div class="field"><label for="l-due">ফেরতের তারিখ (ইচ্ছা হলে)</label><input type="date" id="l-due"></div>
+    <div class="grid2">
+      <div class="field"><label for="l-date">দেওয়ার তারিখ</label><input type="date" id="l-date"></div>
+      <div class="field"><label for="l-due">ফেরতের তারিখ (ইচ্ছা হলে)</label><input type="date" id="l-due"></div>
+    </div>
+    <div class="field"><label for="l-rtype">সুদ বা চার্জ</label>
+      <select id="l-rtype">
+        <option value="none">নেই</option>
+        <option value="flat">একবারে মোট কত শতাংশ</option>
+        <option value="month">প্রতি মাসে শতাংশ</option>
+        <option value="year">প্রতি বছরে শতাংশ</option>
+        <option value="thousand">হাজারে কত টাকা</option>
+      </select></div>
+    <div class="field" id="l-rate-wrap" hidden><label for="l-rate" id="l-rate-lab">হার</label><input type="text" id="l-rate" inputmode="decimal" placeholder="০" autocomplete="off"></div>
+    <p class="muted" id="l-prev" role="status"></p>
+    <div class="field" id="l-paid-wrap" hidden><label for="l-paid">এ পর্যন্ত ফেরত বা শোধ (টাকা)</label><input type="text" id="l-paid" inputmode="decimal" placeholder="০" autocomplete="off"></div>
     <div class="field"><label for="l-note">নোট (ইচ্ছা হলে)</label><input type="text" id="l-note" placeholder="যেমন: দোকানের মাল, জরুরি দরকার" autocomplete="off"></div>
     <div class="err" id="l-err" role="alert"></div>
     <div class="actions">
       <button type="submit" class="btn">সংরক্ষণ</button>
       <button type="button" class="btn ghost" id="l-cancel">বাতিল</button>
+    </div>
+  </form>
+</div>
+
+<div class="overlay" id="overlay3" hidden>
+  <form class="sheet" id="rec-form" role="dialog" aria-modal="true" aria-labelledby="rec-title" novalidate>
+    <h2 id="rec-title">নিয়মিত এন্ট্রি বদলান</h2>
+    <div class="field"><label for="r-amount">পরিমাণ (টাকা)</label><input type="text" id="r-amount" class="amt" inputmode="decimal" placeholder="০" autocomplete="off"></div>
+    <div class="grid2">
+      <div class="field"><label for="r-cat">ক্যাটাগরি</label><select id="r-cat"></select></div>
+      <div class="field"><label for="r-wallet">ওয়ালেট</label><select id="r-wallet"></select></div>
+    </div>
+    <div class="field"><label for="r-day">প্রতি মাসের কত তারিখে (১ থেকে ২৮)</label><input type="text" id="r-day" inputmode="numeric" autocomplete="off"></div>
+    <div class="field"><label for="r-note">নোট (ইচ্ছা হলে)</label><input type="text" id="r-note" autocomplete="off"></div>
+    <div class="err" id="r-err" role="alert"></div>
+    <div class="actions">
+      <button type="submit" class="btn">সংরক্ষণ</button>
+      <button type="button" class="btn ghost" id="r-cancel">বাতিল</button>
     </div>
   </form>
 </div>
@@ -452,20 +493,26 @@ const auth = getAuth(app);
 const db = initializeFirestore(app, { localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() }) });
 
 (function () {
+  var LOGO = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIiB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiI+CjxkZWZzPgo8bGluZWFyR3JhZGllbnQgaWQ9ImJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjMUY2RkIwIi8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjMEIzNTU4Ii8+PC9saW5lYXJHcmFkaWVudD4KPGxpbmVhckdyYWRpZW50IGlkPSJnb2xkIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjRkZEMzZCIi8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjRTg5NjBDIi8+PC9saW5lYXJHcmFkaWVudD4KPC9kZWZzPgo8cmVjdCB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgcng9IjExMiIgZmlsbD0idXJsKCNiZykiLz4KPGNpcmNsZSBjeD0iMjU2IiBjeT0iMjA4IiByPSIxMTgiIGZpbGw9InVybCgjZ29sZCkiLz4KPGNpcmNsZSBjeD0iMjU2IiBjeT0iMjA4IiByPSIxMDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzBCMzU1OCIgc3Ryb2tlLW9wYWNpdHk9Ii4yNSIgc3Ryb2tlLXdpZHRoPSI1Ii8+CjxwYXRoIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE4NS40MCAzMzIuMjApIHNjYWxlKDAuNDAwMCAtMC40MDAwKSIgZD0iTTU2IDU0OFExMDQgNTI4IDExOC4wIDUwMy41UTEzMiA0NzkgMTMyIDQyMlYzNTJIMTk3VjMwMUgxMzJWMjExUTEzMiAxNjQgMTQ2LjAgMTQ1LjBRMTYwIDEyNiAxOTAgMTI0UTIzNyAxMjQgMjcyLjAgMTY1LjBRMzA3IDIwNiAzMDcgMjQ4UTMwNyAyOTQgMjYyIDMxNEwzMDYgMzQ4UTM1OCAzMDkgMzU4IDI0OVEzNTggMTg4IDMxMC41IDEzMC41UTI2MyA3MyAxOTUgNzNRMTM4IDczIDEwOS41IDExMC4wUTgxIDE0NyA4MSAyMzVWMzAxSC01VjM1Mkg4MVY0MjdRODEgNTA1IDMyIDUxMFoiIGZpbGw9IiMwQjM1NTgiLz4KPHBhdGggZD0iTTI1NiAzNTIgQzIxNCAzMzIgMTUwIDMyOCA5NiAzMzggTDk2IDQ0MCBDMTUwIDQzMCAyMTQgNDM0IDI1NiA0NTQgWiIgZmlsbD0iI0ZGRkZGRiIvPgo8cGF0aCBkPSJNMjU2IDM1MiBDMjk4IDMzMiAzNjIgMzI4IDQxNiAzMzggTDQxNiA0NDAgQzM2MiA0MzAgMjk4IDQzNCAyNTYgNDU0IFoiIGZpbGw9IiNEQ0U5RjUiLz4KPHBhdGggZD0iTTI1NiAzNTIgTDI1NiA0NTQiIHN0cm9rZT0iIzBCMzU1OCIgc3Ryb2tlLW9wYWNpdHk9Ii4zNSIgc3Ryb2tlLXdpZHRoPSI0Ii8+CjxnIHN0cm9rZT0iIzFGNkZCMCIgc3Ryb2tlLW9wYWNpdHk9Ii41IiBzdHJva2Utd2lkdGg9IjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCI+PHBhdGggZD0iTTEyNCAzNjYgQzE2MCAzNjIgMjAwIDM2NiAyMzIgMzc4Ii8+PHBhdGggZD0iTTEyNCAzOTIgQzE2MCAzODggMjAwIDM5MiAyMzIgNDA0Ii8+PHBhdGggZD0iTTM4OCAzNjYgQzM1MiAzNjIgMzEyIDM2NiAyODAgMzc4Ii8+PHBhdGggZD0iTTM4OCAzOTIgQzM1MiAzODggMzEyIDM5MiAyODAgNDA0Ii8+PC9nPgo8L3N2Zz4=';
   var KEY = 'ay-bay-khata-v1';
   var BN = '০১২৩৪৫৬৭৮৯';
   var MONTHS = ['জানুয়ারি','ফেব্রুয়ারি','মার্চ','এপ্রিল','মে','জুন','জুলাই','আগস্ট','সেপ্টেম্বর','অক্টোবর','নভেম্বর','ডিসেম্বর'];
   var MSHORT = ['জানু','ফেব্রু','মার্চ','এপ্রি','মে','জুন','জুলাই','আগ','সেপ্টে','অক্টো','নভে','ডিসে'];
   var DAYS = ['রবিবার','সোমবার','মঙ্গলবার','বুধবার','বৃহস্পতিবার','শুক্রবার','শনিবার'];
-  var CATS = {
+  var DEFC = {
     expense: ['খাবার','যাতায়াত','বিল','বাসা ভাড়া','কেনাকাটা','চিকিৎসা','পড়াশোনা','অন্যান্য ব্যয়'],
     income: ['বেতন','ব্যবসা','উপহার','অন্যান্য আয়']
   };
+  var CATS = DEFC;
   var ALLCATS = CATS.income.concat(CATS.expense);
-  var WALLETS = ['হাতে নগদ','ব্যাংক','বিকাশ'];
+  var DEFW = ['হাতে নগদ','ব্যাংক','বিকাশ'];
+  var WALLETS = DEFW;
+  function applyLists(s) { WALLETS = s.wallets; CATS = s.cats; ALLCATS = CATS.income.concat(CATS.expense); }
+  function metaJson() { return JSON.stringify({ budget: state.budget || 0, all: !!state.all, wallets: state.wallets, cats: { income: state.cats.income, expense: state.cats.expense } }); }
+  function defCats() { return { income: DEFC.income.slice(), expense: DEFC.expense.slice() }; }
   var MAIN = ['home', 'tx', 'report', 'settings'];
   var SHOWMONTH = ['home', 'tx', 'report'];
-  var TITLES = { home: 'টাকার খাতা', tx: 'লেনদেন', report: 'রিপোর্ট', settings: 'সেটিংস', wallet: 'ওয়ালেট', loan: 'ধার-বাকি', goal: 'সঞ্চয় লক্ষ্য', budget: 'মাসের বাজেট', rec: 'নিয়মিত খরচ', notes: 'নোট' };
+  var TITLES = { home: 'টাকার খাতা', tx: 'লেনদেন', report: 'রিপোর্ট', settings: 'সেটিংস', wallet: 'ওয়ালেট', loan: 'ধার-বাকি', goal: 'সঞ্চয় লক্ষ্য', budget: 'মাসের বাজেট', rec: 'নিয়মিত খরচ', notes: 'নোট', calc: 'সুদ ও রিচার্জ হিসাব' };
   var ICONS = {
     home: 'M3 11l9-8 9 8M5 10v10h5v-6h4v6h5V10',
     list: 'M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01',
@@ -482,7 +529,9 @@ const db = initializeFirestore(app, { localCache: persistentLocalCache({ tabMana
     swap: 'M4 8h14l-3-3M20 16H6l3 3',
     notes: 'M6 3h9l4 4v14H6zM14 3v5h5M9 13h7M9 17h7',
     wallet: 'M3 7a2 2 0 0 1 2-2h13v4M3 7v11a2 2 0 0 0 2 2h15V9H5a2 2 0 0 1-2-2zM16 14.5h.01',
-    bell: 'M6 16v-5a6 6 0 0 1 12 0v5l2 2H4zM10 21h4'
+    bell: 'M6 16v-5a6 6 0 0 1 12 0v5l2 2H4zM10 21h4',
+    percent: 'M19 5L5 19M7.5 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM16.5 18a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z',
+    phone: 'M8 3h8a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zM11 18h2'
   };
 
   function $(id) { return document.getElementById(id); }
@@ -567,6 +616,9 @@ const db = initializeFirestore(app, { localCache: persistentLocalCache({ tabMana
   function save() { syncOut(); }
   function migrate(s) {
     s.loans = s.loans || []; s.goals = s.goals || []; s.recurring = s.recurring || []; s.notes = s.notes || [];
+    if (!s.wallets || !s.wallets.length) s.wallets = DEFW.slice();
+    if (!s.cats || !s.cats.income || !s.cats.expense) s.cats = defCats();
+    applyLists(s);
     if (!s.v || s.v < 3) {
       var hadDemo = s.tx.some(function (t) { return t.demo; });
       var x = seedExtras();
@@ -586,6 +638,7 @@ const db = initializeFirestore(app, { localCache: persistentLocalCache({ tabMana
   var editingId = null, budgetEditing = false, deleteArmed = false;
   var loanPay = '', goalPay = null, goalAdding = false, armedId = '';
   var restoreArmed = false, wipeArmed = false;
+  var goalEditId = null, noteEditId = null, recEditId = null, listEdit = null, listMsg = {}, loanKind = 'all', loanEditId = null;
 
   /* ---------- helpers ---------- */
   function monthKey() { return view.y + '-' + pad(view.m + 1); }
@@ -605,6 +658,21 @@ const db = initializeFirestore(app, { localCache: persistentLocalCache({ tabMana
     var t0 = new Date(today.getFullYear(), today.getMonth(), today.getDate());
     return Math.round((parseYmd(s) - t0) / 86400000);
   }
+  function loanInterest(l, endYmd) {
+    var r = +l.rate || 0, t = l.rtype || 'none';
+    if (!r || t === 'none') return 0;
+    var v;
+    if (t === 'flat') v = l.amount * r / 100;
+    else if (t === 'thousand') v = l.amount / 1000 * r;
+    else {
+      var mo = Math.max(0, (parseYmd(endYmd || l.fin || ymd(today)) - parseYmd(l.date || ymd(today))) / 86400000 / 30);
+      v = l.amount * r / 100 * (t === 'month' ? mo : mo / 12);
+    }
+    return Math.round(v * 100) / 100;
+  }
+  function loanTotal(l) { return l.amount + loanInterest(l); }
+  function loanRem(l) { return Math.round((loanTotal(l) - l.paid) * 100) / 100; }
+  function r2(x) { return Math.round(x * 100) / 100; }
   function shortDate(s) { var d = parseYmd(s); return toBn(d.getDate()) + ' ' + MONTHS[d.getMonth()] + ' ' + toBn(d.getFullYear()); }
   function dayLabel(s) { var d = parseYmd(s); return toBn(d.getDate()) + ' ' + MONTHS[d.getMonth()] + ', ' + DAYS[d.getDay()]; }
   function anyDemo() {
@@ -646,7 +714,7 @@ const db = initializeFirestore(app, { localCache: persistentLocalCache({ tabMana
   function buildAlerts() {
     var a = [];
     state.loans.forEach(function (l) {
-      var rem = l.amount - l.paid;
+      var rem = loanRem(l);
       if (rem <= 0 || !l.due) return;
       var d = daysUntil(l.due), given = l.dir === 'given';
       if (d < 0) a.push({ c: 'over', t: esc(l.person) + (given ? ' থেকে ' + money(rem) + ' পাওনা, ' : ' কে ' + money(rem) + ' দেওয়ার কথা ছিল, ') + toBn(-d) + ' দিন আগে' });
@@ -666,7 +734,7 @@ const db = initializeFirestore(app, { localCache: persistentLocalCache({ tabMana
     var list = state.all ? state.tx : monthTx();
     var inc = sum(list, 'income'), exp = sum(list, 'expense');
     var recv = 0, owe = 0, saved = 0;
-    state.loans.forEach(function (l) { var rem = l.amount - l.paid; if (rem > 0) { if (l.dir === 'given') recv += rem; else owe += rem; } });
+    state.loans.forEach(function (l) { var rem = loanRem(l); if (rem > 0) { if (l.dir === 'given') recv += rem; else owe += rem; } });
     state.goals.forEach(function (g) { saved += g.saved; });
     var left = state.budget ? state.budget - sum(monthTx(), 'expense') : null;
     var per = state.all ? 'সব সময়ের হিসাব' : MONTHS[view.m] + ' ' + toBn(view.y);
@@ -693,10 +761,11 @@ const db = initializeFirestore(app, { localCache: persistentLocalCache({ tabMana
       h += '<section class="alerts" aria-label="নোটিশ"><h2>নোটিশ</h2>' + al.map(function (x) { return '<div class="al ' + x.c + '"><i></i><span>' + x.t + '</span></div>'; }).join('') + '</section>';
     }
 
-    var sc = [['goal', 'সঞ্চয়', 'target'], ['loan', 'ধার-বাকি', 'loan'], ['budget', 'বাজেট', 'budget'], ['rec', 'নিয়মিত', 'repeat'],
-      ['transfer', 'ওয়ালেট ট্রান্সফার', 'swap'], ['notes', 'নোট', 'notes'], ['wallet', 'ওয়ালেট', 'wallet'], ['report', 'রিপোর্ট', 'chart']];
+    var sc = [['loan', 'ধার-বাকি', 'loan'], ['rcl', 'রিচার্জ বাকি', 'phone'], ['calc', 'সুদ ও রিচার্জ হিসাব', 'percent'], ['goal', 'সঞ্চয়', 'target'],
+      ['budget', 'বাজেট', 'budget'], ['rec', 'নিয়মিত', 'repeat'], ['transfer', 'ওয়ালেট ট্রান্সফার', 'swap'], ['notes', 'নোট', 'notes'],
+      ['wallet', 'ওয়ালেট', 'wallet'], ['report', 'রিপোর্ট', 'chart']];
     h += '<div class="shortcuts">' + sc.map(function (s) {
-      var attr = s[0] === 'transfer' ? 'data-new-transfer="1"' : 'data-go="' + s[0] + '"';
+      var attr = s[0] === 'transfer' ? 'data-new-transfer="1"' : s[0] === 'rcl' ? 'data-go="loan" data-lk="recharge"' : 'data-go="' + s[0] + '"';
       return '<button type="button" class="sc" ' + attr + '><span class="w">' + ic(s[2]) + '</span>' + s[1] + '</button>';
     }).join('') + '</div>';
 
@@ -717,7 +786,16 @@ const db = initializeFirestore(app, { localCache: persistentLocalCache({ tabMana
   }
 
   /* ---------- transactions ---------- */
+  function refreshFcat() {
+    var names = [];
+    ALLCATS.concat(state.tx.filter(function (t) { return t.type !== 'transfer'; }).map(function (t) { return t.cat; })).forEach(function (c) { if (names.indexOf(c) < 0) names.push(c); });
+    var sel = $('fcat');
+    sel.innerHTML = '<option value="all">সব ক্যাটাগরি</option>' + names.map(function (c) { return '<option>' + esc(c) + '</option>'; }).join('');
+    sel.value = names.indexOf(filters.cat) >= 0 ? filters.cat : 'all';
+    filters.cat = sel.value;
+  }
   function renderTx() {
+    refreshFcat();
     var q = filters.q.trim().toLowerCase();
     var list = monthTx().filter(function (t) {
       if (filters.type !== 'all' && t.type !== filters.type) return false;
@@ -747,7 +825,8 @@ const db = initializeFirestore(app, { localCache: persistentLocalCache({ tabMana
   /* ---------- wallet ---------- */
   function renderWallet() {
     var h = '<section class="card"><div class="sum2"><div><div class="n">মোট ব্যালেন্স</div><div class="v">' + money(totalBal()) + '</div></div></div><div>' +
-      '<button type="button" class="btn" data-new-transfer="1">এক ওয়ালেট থেকে অন্যটিতে ট্রান্সফার</button></div></section>';
+      '<button type="button" class="btn" data-new-transfer="1">এক ওয়ালেট থেকে অন্যটিতে ট্রান্সফার</button></div>' +
+      '<div><button type="button" class="btn ghost" data-go="settings">ওয়ালেট বদলান বা নতুন যোগ করুন</button></div></section>';
     h += '<section class="card"><h2>ওয়ালেট</h2><div>' + WALLETS.map(function (w) {
       var v = walletBal(w);
       return '<div class="item"><div class="head"><div class="nm">' + esc(w) + '</div><div class="amt ' + (v < 0 ? 'expense' : '') + '">' + money(v) + '</div></div></div>';
@@ -758,37 +837,53 @@ const db = initializeFirestore(app, { localCache: persistentLocalCache({ tabMana
   }
 
   /* ---------- loans ---------- */
+  function rateText(l) {
+    var r = +l.rate || 0, t = l.rtype || 'none';
+    if (!r || t === 'none') return '';
+    if (t === 'flat') return 'একবারে ' + toBn(r) + '%';
+    if (t === 'month') return 'মাসে ' + toBn(r) + '%';
+    if (t === 'year') return 'বছরে ' + toBn(r) + '%';
+    return 'হাজারে ' + money(r);
+  }
   function loanItem(l) {
-    var rem = l.amount - l.paid, settled = rem <= 0, given = l.dir === 'given', pill = '';
+    var tot = loanTotal(l), rem = loanRem(l), intr = loanInterest(l), settled = rem <= 0, given = l.dir === 'given', rc = l.kind === 'recharge', pill = '';
     if (settled) pill = '<span class="pill neutral">মিটে গেছে</span>';
     else if (l.due) {
       var dd = daysUntil(l.due);
       if (dd < 0) pill = '<span class="pill over">' + toBn(-dd) + ' দিন আগে মেয়াদ শেষ</span>';
       else if (dd <= 7) pill = '<span class="pill warn">' + (dd === 0 ? 'আজই শেষ দিন' : toBn(dd) + ' দিন বাকি') + '</span>';
     }
+    var pct = tot > 0 ? Math.min(100, l.paid / tot * 100) : 0;
     var armed = armedId === 'loan:' + l.id;
-    var h = '<div class="item"><div class="head"><div><div class="nm">' + esc(l.person) + '</div><div class="muted">' + (given ? 'ধার দিয়েছি' : 'ধার নিয়েছি') + (l.note ? ' · ' + esc(l.note) : '') + '</div></div>' +
-      '<div class="amt ' + (settled ? 'done' : given ? 'income' : 'expense') + '">' + money(settled ? l.amount : rem) + '</div></div>' +
-      '<div class="meter" role="img" aria-label="' + toBn(Math.round(Math.min(100, l.paid / l.amount * 100))) + ' শতাংশ মিটেছে"><i style="width:' + Math.min(100, l.paid / l.amount * 100) + '%"></i></div>' +
-      '<div class="row muted"><span>মোট ' + money(l.amount) + ' · ' + (given ? 'ফেরত পেয়েছি ' : 'শোধ দিয়েছি ') + money(l.paid) + '</span>' + (l.due ? '<span>তারিখ: ' + shortDate(l.due) + '</span>' : '') + '</div>' +
+    var kindTxt = rc ? (given ? 'রিচার্জ বাকি দিয়েছি' : 'রিচার্জ বাকি নিয়েছি') : (given ? 'ধার দিয়েছি' : 'ধার নিয়েছি');
+    var h = '<div class="item"><div class="head"><div><div class="nm">' + esc(l.person) + '</div><div class="muted">' + kindTxt + (l.note ? ' · ' + esc(l.note) : '') + '</div></div>' +
+      '<div class="amt ' + (settled ? 'done' : given ? 'income' : 'expense') + '">' + money(settled ? tot : rem) + '</div></div>' +
+      '<div class="meter" role="img" aria-label="' + toBn(Math.round(pct)) + ' শতাংশ মিটেছে"><i style="width:' + pct + '%"></i></div>' +
+      '<div class="row muted"><span>মোট ' + money(tot) + ' · ' + (given ? 'ফেরত পেয়েছি ' : 'শোধ দিয়েছি ') + money(l.paid) + '</span>' + (l.due ? '<span>তারিখ: ' + shortDate(l.due) + '</span>' : '') + '</div>' +
+      (intr > 0 ? '<div class="muted">মূল ' + money(l.amount) + ' + ' + (rc ? 'চার্জ ' : 'সুদ ') + money(intr) + ' (' + rateText(l) + ')</div>' : '') +
       (pill ? '<div>' + pill + '</div>' : '');
     if (loanPay === l.id) {
       h += '<form class="inline-form" data-pay-form="' + esc(l.id) + '"><input type="text" id="pay-input" inputmode="decimal" aria-label="কত টাকা" value="' + toBn(rem) + '" autocomplete="off"><button type="submit" class="btn">সংরক্ষণ</button><button type="button" class="btn ghost" data-pay-cancel="1">বাতিল</button></form>';
     } else {
       h += '<div class="acts">' + (settled ? '' : '<button type="button" class="small-btn" data-pay="' + esc(l.id) + '">' + (given ? 'ফেরত পেলাম' : 'শোধ দিলাম') + '</button>') +
+        '<button type="button" class="small-btn" data-loan-edit="' + esc(l.id) + '">বদলান</button>' +
         '<button type="button" class="small-btn danger' + (armed ? ' armed' : '') + '" data-loan-del="' + esc(l.id) + '">' + (armed ? 'নিশ্চিত, মুছুন' : 'মুছুন') + '</button></div>';
     }
     return h + '</div>';
   }
   function renderLoan() {
+    function lk(k, t) { return '<button type="button" data-lk="' + k + '" aria-pressed="' + (loanKind === k) + '">' + t + '</button>'; }
     var recv = 0, owe = 0, active = [], done = [];
     state.loans.forEach(function (l) {
-      var rem = l.amount - l.paid;
+      if (loanKind !== 'all' && (l.kind || 'cash') !== loanKind) return;
+      var rem = loanRem(l);
       if (rem > 0) { active.push(l); if (l.dir === 'given') recv += rem; else owe += rem; } else done.push(l);
     });
     active.sort(function (a, b) { return (a.due || '9999') < (b.due || '9999') ? -1 : 1; });
-    var h = '<section class="card"><div class="sum2"><div><div class="n">পাবো</div><div class="v pos">' + money(recv) + '</div></div><div><div class="n">দেবো</div><div class="v neg">' + money(owe) + '</div></div></div>' +
+    var h = '<section class="card"><div class="seg" role="group" aria-label="ধরন">' + lk('all', 'সব') + lk('cash', 'ধার-হাওলাত') + lk('recharge', 'রিচার্জ বাকি') + '</div>' +
+      '<div class="sum2"><div><div class="n">পাবো</div><div class="v pos">' + money(recv) + '</div></div><div><div class="n">দেবো</div><div class="v neg">' + money(owe) + '</div></div></div>' +
       '<div><button type="button" class="btn" data-loan-add="1">নতুন ধার-বাকি যোগ করুন</button></div>' +
+      '<div><button type="button" class="btn ghost" data-go="calc">সুদ ও রিচার্জ হিসাব করুন</button></div>' +
       '<p class="muted">এই হিসাব ওয়ালেটের ব্যালেন্স থেকে আলাদা।</p></section>';
     h += '<section class="card"><h2>চলমান</h2>' + (active.length ? '<div>' + active.map(loanItem).join('') + '</div>' : '<p class="muted">কোনো বাকি নেই।</p>') + '</section>';
     if (done.length) h += '<section class="card"><h2>মিটে গেছে</h2><div>' + done.map(loanItem).join('') + '</div></section>';
@@ -814,18 +909,21 @@ const db = initializeFirestore(app, { localCache: persistentLocalCache({ tabMana
     } else {
       h += '<div class="acts"><button type="button" class="small-btn" data-dep="' + esc(g.id) + '">জমা দিন</button>' +
         (g.saved > 0 ? '<button type="button" class="small-btn" data-wd="' + esc(g.id) + '">তুলে নিন</button>' : '') +
+        '<button type="button" class="small-btn" data-goal-edit="' + esc(g.id) + '">বদলান</button>' +
         '<button type="button" class="small-btn danger' + (armed ? ' armed' : '') + '" data-goal-del="' + esc(g.id) + '">' + (armed ? 'নিশ্চিত, মুছুন' : 'মুছুন') + '</button></div>';
     }
     return h + '</div>';
   }
   function renderGoal() {
-    var h = '<section class="card"><div class="row"><h2>সঞ্চয় লক্ষ্য</h2>' + (goalAdding ? '' : '<button type="button" class="btn-text" data-goal-add="1">নতুন লক্ষ্য</button>') + '</div>' +
+    var eg = goalEditId ? state.goals.filter(function (g) { return g.id === goalEditId; })[0] : null;
+    var h = '<section class="card"><div class="row"><h2>সঞ্চয় লক্ষ্য</h2>' + (goalAdding || eg ? '' : '<button type="button" class="btn-text" data-goal-add="1">নতুন লক্ষ্য</button>') + '</div>' +
       '<p class="muted">জমানো টাকা ওয়ালেটের ব্যালেন্স থেকে আলাদা হিসাব।</p></section>';
-    if (goalAdding) {
-      h += '<form id="goal-form" class="card" novalidate><h2>নতুন লক্ষ্য</h2>' +
-        '<div class="field"><label for="g-name">লক্ষ্যের নাম</label><input type="text" id="g-name" placeholder="যেমন: নতুন ফোন, ঈদের কেনাকাটা" autocomplete="off"></div>' +
-        '<div class="grid2"><div class="field"><label for="g-target">কত টাকা জমাতে চান</label><input type="text" id="g-target" inputmode="decimal" placeholder="০" autocomplete="off"></div>' +
-        '<div class="field"><label for="g-date">কবের মধ্যে (ইচ্ছা হলে)</label><input type="date" id="g-date"></div></div>' +
+    if (goalAdding || eg) {
+      h += '<form id="goal-form" class="card" novalidate><h2>' + (eg ? 'লক্ষ্য বদলান' : 'নতুন লক্ষ্য') + '</h2>' +
+        '<div class="field"><label for="g-name">লক্ষ্যের নাম</label><input type="text" id="g-name" placeholder="যেমন: নতুন ফোন, ঈদের কেনাকাটা" autocomplete="off" value="' + (eg ? esc(eg.name) : '') + '"></div>' +
+        '<div class="grid2"><div class="field"><label for="g-target">কত টাকা জমাতে চান</label><input type="text" id="g-target" inputmode="decimal" placeholder="০" autocomplete="off" value="' + (eg ? toBn(eg.target) : '') + '"></div>' +
+        '<div class="field"><label for="g-date">কবের মধ্যে (ইচ্ছা হলে)</label><input type="date" id="g-date" value="' + (eg ? esc(eg.date || '') : '') + '"></div></div>' +
+        (eg ? '<div class="field"><label for="g-saved">এ পর্যন্ত জমেছে (টাকা)</label><input type="text" id="g-saved" inputmode="decimal" placeholder="০" autocomplete="off" value="' + toBn(eg.saved) + '"></div>' : '') +
         '<div class="err" id="g-err" role="alert"></div>' +
         '<div class="actions"><button type="submit" class="btn">সংরক্ষণ</button><button type="button" class="btn ghost" data-goal-cancel="1">বাতিল</button></div></form>';
     }
@@ -873,7 +971,8 @@ const db = initializeFirestore(app, { localCache: persistentLocalCache({ tabMana
     return '<div class="item"><div class="head"><div><div class="nm">' + esc(r.cat) + (r.note ? ' · ' + esc(r.note) : '') + '</div>' +
       '<div class="muted">প্রতি মাসের ' + toBn(r.day) + ' তারিখে · পরের বার ' + toBn(d) + ' ' + MONTHS[m] + '</div></div>' +
       '<div class="amt ' + r.type + '">' + (r.type === 'income' ? '+' : '−') + money(r.amount) + '</div></div>' +
-      '<div class="acts"><button type="button" class="small-btn danger' + (armed ? ' armed' : '') + '" data-rec-del="' + esc(r.id) + '">' + (armed ? 'নিশ্চিত, বন্ধ করুন' : 'বন্ধ করুন') + '</button></div></div>';
+      '<div class="acts"><button type="button" class="small-btn" data-rec-edit="' + esc(r.id) + '">বদলান</button>' +
+      '<button type="button" class="small-btn danger' + (armed ? ' armed' : '') + '" data-rec-del="' + esc(r.id) + '">' + (armed ? 'নিশ্চিত, বন্ধ করুন' : 'বন্ধ করুন') + '</button></div></div>';
   }
   function renderRec() {
     $('v-rec').innerHTML = '<section class="card"><h2>নিয়মিত আয় ও খরচ</h2><p class="muted">বাসা ভাড়া, ইন্টারনেট বিল বা বেতনের মতো প্রতি মাসের এন্ট্রি একবার ঠিক করলে প্রতি মাসে নিজে থেকে যোগ হবে।</p>' +
@@ -887,10 +986,110 @@ const db = initializeFirestore(app, { localCache: persistentLocalCache({ tabMana
     var notes = state.notes.slice().sort(function (a, b) { return a.date < b.date ? 1 : -1; });
     h += '<section class="card"><h2>সব নোট</h2>' + (notes.length ? '<div>' + notes.map(function (n) {
       var armed = armedId === 'note:' + n.id;
-      return '<div class="item"><div class="nm">' + esc(n.text) + '</div><div class="row"><span class="muted">' + shortDate(n.date) + '</span>' +
-        '<button type="button" class="small-btn danger' + (armed ? ' armed' : '') + '" data-note-del="' + esc(n.id) + '">' + (armed ? 'নিশ্চিত, মুছুন' : 'মুছুন') + '</button></div></div>';
+      if (noteEditId === n.id) {
+        return '<div class="item"><form class="inline-form" data-note-edit-form="' + esc(n.id) + '"><input type="text" id="note-edit-input" aria-label="নোট বদলান" value="' + esc(n.text) + '" autocomplete="off"><button type="submit" class="btn">সংরক্ষণ</button><button type="button" class="btn ghost" data-note-edit-cancel="1">বাতিল</button></form></div>';
+      }
+      return '<div class="item"><div class="nm">' + esc(n.text) + '</div><div class="row"><span class="muted">' + shortDate(n.date) + '</span><span class="acts">' +
+        '<button type="button" class="small-btn" data-note-edit="' + esc(n.id) + '">বদলান</button>' +
+        '<button type="button" class="small-btn danger' + (armed ? ' armed' : '') + '" data-note-del="' + esc(n.id) + '">' + (armed ? 'নিশ্চিত, মুছুন' : 'মুছুন') + '</button></span></div></div>';
     }).join('') + '</div>' : '<p class="muted">কোনো নোট নেই।</p>') + '</section>';
     $('v-notes').innerHTML = h;
+  }
+
+  /* ---------- wallet and category lists ---------- */
+  function listArr(kind) { return kind === 'wallet' ? state.wallets : state.cats[kind]; }
+  function listCard(kind, title, hint) {
+    var arr = listArr(kind);
+    var h = '<section class="card"><h2>' + title + '</h2><p class="muted">' + hint + '</p>';
+    if (listMsg.kind === kind) h += '<p class="muted" role="status">' + esc(listMsg.text) + '</p>';
+    h += '<div>';
+    arr.forEach(function (name, i) {
+      var key = kind + ':' + i;
+      if (listEdit && listEdit.kind === kind && listEdit.idx === i) {
+        h += '<div class="item"><form class="inline-form" data-list-form="' + kind + '" data-idx="' + i + '"><input type="text" id="list-input" value="' + esc(name) + '" aria-label="নাম" autocomplete="off"><button type="submit" class="btn">সংরক্ষণ</button><button type="button" class="btn ghost" data-list-cancel="1">বাতিল</button></form></div>';
+      } else {
+        var armed = armedId === 'list:' + key;
+        h += '<div class="item"><div class="head"><div class="nm">' + esc(name) + '</div><div class="acts"><button type="button" class="small-btn" data-list-edit="' + key + '">বদলান</button>' +
+          '<button type="button" class="small-btn danger' + (armed ? ' armed' : '') + '" data-list-del="' + key + '">' + (armed ? 'নিশ্চিত, মুছুন' : 'মুছুন') + '</button></div></div></div>';
+      }
+    });
+    h += '</div>';
+    if (listEdit && listEdit.kind === kind && listEdit.idx === -1) {
+      h += '<form class="inline-form" data-list-form="' + kind + '" data-idx="-1"><input type="text" id="list-input" placeholder="নতুন নাম" aria-label="নতুন নাম" autocomplete="off"><button type="submit" class="btn">যোগ করুন</button><button type="button" class="btn ghost" data-list-cancel="1">বাতিল</button></form>';
+    } else {
+      h += '<div><button type="button" class="btn ghost" data-list-add="' + kind + '">নতুন যোগ করুন</button></div>';
+    }
+    return h + '</section>';
+  }
+
+  /* ---------- calculators ---------- */
+  function renderCalc() {
+    if ($('v-calc').firstChild) return;
+    function fld(id, lab, ph) { return '<div class="field"><label for="' + id + '">' + lab + '</label><input type="text" id="' + id + '" inputmode="decimal" placeholder="' + (ph || '০') + '" autocomplete="off"></div>'; }
+    $('v-calc').innerHTML =
+      '<section class="card"><h2>লোনের সুদ হিসাব</h2><p class="muted">কত টাকা নিলে বা দিলে, কত সুদে, কত সময়ের জন্য, মোট কত ফেরত দিতে হবে।</p>' +
+      fld('c1-p', 'মূল টাকা') + fld('c1-r', 'সুদের হার (%)') +
+      '<div class="field"><label for="c1-t">হার কেমন</label><select id="c1-t"><option value="month">প্রতি মাসে</option><option value="year">প্রতি বছরে</option><option value="flat">একবারে মোট</option></select></div>' +
+      fld('c1-n', 'কত মাসের জন্য') + '<div class="calc-out" id="c1-out" role="status"></div></section>' +
+      '<section class="card"><h2>ফেরতের টাকা থেকে সুদের হার</h2><p class="muted">যেমন বিকাশ বা অ্যাপ থেকে লোন নিয়েছেন। কত নিয়েছেন আর মোট কত দিতে হবে লিখলে সুদের হার বের হবে।</p>' +
+      fld('c2-p', 'লোনের টাকা') + fld('c2-b', 'মোট ফেরত দিতে হবে') + fld('c2-n', 'কত মাসে শোধ') +
+      '<div class="calc-out" id="c2-out" role="status"></div></section>' +
+      '<section class="card"><h2>রিচার্জ: হাজারে কত টাকা</h2><p class="muted">চার্জ বা কমিশনের টাকা লিখলে হাজারে কত হয় বের হবে। হাজারের রেট লিখলে মোট টাকা বের হবে।</p>' +
+      fld('c3-a', 'রিচার্জের পরিমাণ') + fld('c3-c', 'মোট চার্জ বা কমিশন (টাকা)') + fld('c3-k', 'হাজারে কত টাকা') +
+      '<div class="calc-out" id="c3-out" role="status"></div></section>';
+  }
+  function cv(id) { var v = num($(id).value); return isFinite(v) ? v : 0; }
+  function calcRows(rows) { return rows.map(function (r) { return '<div class="r' + (r[2] ? ' big' : '') + '"><span>' + r[0] + '</span><b>' + r[1] + '</b></div>'; }).join(''); }
+  function calcUpdate(id) {
+    var rows = [], p, r, n, intr, t;
+    if (id.indexOf('c1-') === 0) {
+      p = cv('c1-p'); r = cv('c1-r'); n = cv('c1-n'); t = $('c1-t').value;
+      if (p > 0 && r > 0) {
+        var perMonth = t === 'month' ? p * r / 100 : t === 'year' ? p * r / 1200 : (n > 0 ? p * r / 100 / n : 0);
+        if (t === 'flat') intr = p * r / 100; else if (n > 0) intr = perMonth * n;
+        if (perMonth > 0) rows.push(['প্রতি মাসে সুদ', money(perMonth)]);
+        if (intr > 0) {
+          rows.push(['মোট সুদ', money(intr), 1]);
+          rows.push(['মোট ফেরত', money(p + intr), 1]);
+          rows.push(['হাজারে সুদ', money(intr / p * 1000)]);
+          if (n > 0) rows.push(['প্রতি মাসে কিস্তি', money((p + intr) / n)]);
+        } else if (t !== 'flat') rows.push(['কত মাস লিখলে মোট সুদ দেখা যাবে', '']);
+      }
+      $('c1-out').innerHTML = calcRows(rows);
+    } else if (id.indexOf('c2-') === 0) {
+      p = cv('c2-p'); var b = cv('c2-b'); n = cv('c2-n');
+      if (p > 0 && b > 0) {
+        if (b < p) rows.push(['ফেরতের টাকা লোনের টাকার চেয়ে কম', '']);
+        else {
+          intr = b - p; var tp = intr / p * 100;
+          rows.push(['মোট সুদ বা খরচ', money(intr), 1]);
+          rows.push(['মোট শতাংশ', toBn(r2(tp)) + '%', 1]);
+          rows.push(['হাজারে', money(intr / p * 1000)]);
+          if (n > 0) {
+            rows.push(['মাসে শতাংশ', toBn(r2(tp / n)) + '%']);
+            rows.push(['বছরে শতাংশ', toBn(r2(tp / n * 12)) + '%']);
+            rows.push(['প্রতি মাসে কিস্তি', money(b / n)]);
+          }
+        }
+      }
+      $('c2-out').innerHTML = calcRows(rows);
+    } else if (id.indexOf('c3-') === 0) {
+      var a = cv('c3-a'), c = cv('c3-c'), k = cv('c3-k'), hasC = $('c3-c').value.trim() !== '', hasK = $('c3-k').value.trim() !== '';
+      if (id === 'c3-c' && a > 0 && hasC) { k = r2(c / a * 1000); $('c3-k').value = toBn(k); }
+      else if (id === 'c3-k' && a > 0 && hasK) { c = r2(a * k / 1000); $('c3-c').value = toBn(c); }
+      else if (id === 'c3-a' && a > 0) {
+        if (hasK) { c = r2(a * k / 1000); $('c3-c').value = toBn(c); }
+        else if (hasC) { k = r2(c / a * 1000); $('c3-k').value = toBn(k); }
+      }
+      if (a > 0 && (hasC || hasK)) {
+        rows.push(['হাজারে', money(k), 1]);
+        rows.push(['শতকরা', toBn(r2(k / 10)) + '%']);
+        rows.push(['মোট চার্জ বা কমিশন', money(c), 1]);
+        rows.push(['চার্জ যোগ করলে মোট', money(a + c)]);
+        rows.push(['চার্জ বাদ গেলে হাতে', money(a - c)]);
+      }
+      $('c3-out').innerHTML = calcRows(rows);
+    }
   }
 
   /* ---------- settings ---------- */
@@ -901,6 +1100,9 @@ const db = initializeFirestore(app, { localCache: persistentLocalCache({ tabMana
     if (anyDemo()) {
       h += '<section class="card"><h2>নমুনা তথ্য</h2><p class="muted">অ্যাপ কেমন চলে দেখানোর জন্য এখন কিছু নমুনা তথ্য আছে।</p><div><button type="button" class="btn" id="clear-demo2">নমুনা মুছে নিজের হিসাব শুরু করুন</button></div></section>';
     }
+    h += listCard('wallet', 'ওয়ালেট', 'ওয়ালেটের নাম বদলানো বা নতুন যোগ করা যায়। লেনদেন আছে এমন ওয়ালেট মুছা যায় না।');
+    h += listCard('income', 'আয়ের ক্যাটাগরি', 'নিজের মতো ক্যাটাগরি রাখুন। নাম বদলালে আগের এন্ট্রিতেও বদলে যাবে।');
+    h += listCard('expense', 'ব্যয়ের ক্যাটাগরি', 'নিজের মতো ক্যাটাগরি রাখুন। মুছলে আগের এন্ট্রির নাম থেকে যাবে।');
     h += '<section class="card"><h2>ব্যাকআপ ও রিস্টোর</h2><p class="muted">আপনার তথ্য সার্ভারে সেভ থাকে। তবু ব্যাকআপ কপি রেখে দিতে পারেন। আগের অ্যাপ থেকে তথ্য আনতে সেখানকার ব্যাকআপ এখানে রিস্টোর করুন।</p>' +
       '<div><button type="button" class="btn" id="backup-btn">ব্যাকআপ কপি করুন</button></div>' +
       '<textarea id="backup-text" readonly aria-label="ব্যাকআপ লেখা" placeholder="ব্যাকআপ এখানে দেখা যাবে"></textarea>' +
@@ -974,11 +1176,11 @@ const db = initializeFirestore(app, { localCache: persistentLocalCache({ tabMana
   }
   function renderAll() {
     renderHeader(); renderHome(); renderTx(); renderWallet(); renderLoan(); renderGoal();
-    renderBudget(); renderRec(); renderNotes(); renderSettings(); renderReport();
+    renderBudget(); renderRec(); renderNotes(); renderCalc(); renderSettings(); renderReport();
   }
   function setPage(p) {
     page = p;
-    armedId = ''; loanPay = ''; goalPay = null; goalAdding = false; budgetEditing = false; restoreArmed = false; wipeArmed = false;
+    armedId = ''; loanPay = ''; goalPay = null; goalAdding = false; budgetEditing = false; goalEditId = null; noteEditId = null; listEdit = null; listMsg = {}; restoreArmed = false; wipeArmed = false;
     Object.keys(TITLES).forEach(function (n) { $('v-' + n).hidden = n !== p; });
     var main = MAIN.indexOf(p) >= 0;
     $('back').hidden = main;
@@ -996,10 +1198,12 @@ const db = initializeFirestore(app, { localCache: persistentLocalCache({ tabMana
 
   /* ---------- entry sheet ---------- */
   function fillCats(type, selected) {
-    $('f-cat').innerHTML = CATS[type].map(function (c) { return '<option' + (c === selected ? ' selected' : '') + '>' + esc(c) + '</option>'; }).join('');
+    var l = CATS[type].slice(); if (selected && l.indexOf(selected) < 0) l.push(selected);
+    $('f-cat').innerHTML = l.map(function (c) { return '<option' + (c === selected ? ' selected' : '') + '>' + esc(c) + '</option>'; }).join('');
   }
   function walletOptions(id, sel) {
-    $(id).innerHTML = WALLETS.map(function (w) { return '<option' + (w === sel ? ' selected' : '') + '>' + esc(w) + '</option>'; }).join('');
+    var l = WALLETS.slice(); if (sel && l.indexOf(sel) < 0) l.push(sel);
+    $(id).innerHTML = l.map(function (w) { return '<option' + (w === sel ? ' selected' : '') + '>' + esc(w) + '</option>'; }).join('');
   }
   function curType() { return document.querySelector('input[name="ftype"]:checked').value; }
   function syncType() {
@@ -1034,26 +1238,106 @@ const db = initializeFirestore(app, { localCache: persistentLocalCache({ tabMana
   }
   function closeSheet() { $('overlay').hidden = true; editingId = null; }
 
-  function openLoan() {
-    armedId = '';
-    $('l-given').checked = true;
-    ['l-person', 'l-amount', 'l-due', 'l-note'].forEach(function (id) { $(id).value = ''; });
+  var RLAB = { flat: 'একবারে মোট কত শতাংশ (%)', month: 'প্রতি মাসে কত শতাংশ (%)', year: 'প্রতি বছরে কত শতাংশ (%)', thousand: 'প্রতি হাজারে কত টাকা' };
+  function updLoanPrev() {
+    var rt = $('l-rtype').value, amt = num($('l-amount').value) || 0, r = num($('l-rate').value) || 0, due = $('l-due').value, rc = $('l-kind').value === 'recharge';
+    $('l-rate-wrap').hidden = rt === 'none';
+    $('l-rate-lab').textContent = RLAB[rt] || '';
+    var p = '';
+    if (rt !== 'none' && amt > 0 && r > 0) {
+      var tmp = { amount: amt, rate: r, rtype: rt, date: $('l-date').value || ymd(today) };
+      var timed = rt === 'month' || rt === 'year';
+      var i = loanInterest(tmp, timed && due ? due : null);
+      p = (timed ? (due ? 'ফেরতের তারিখ পর্যন্ত ' : 'আজ পর্যন্ত ') : '') + (rc ? 'চার্জ ' : 'সুদ ') + money(i) + ' · মোট ' + money(amt + i) + (timed && !due ? ' (সময় যত বাড়বে সুদও বাড়বে)' : '');
+    }
+    $('l-prev').textContent = p;
+  }
+  function openLoan(id) {
+    armedId = ''; loanEditId = id || null;
+    var l = id ? state.loans.filter(function (x) { return x.id === id; })[0] : null;
+    $('loan-title').textContent = l ? 'ধার-বাকি বদলান' : 'নতুন ধার-বাকি';
+    (l && l.dir === 'taken' ? $('l-taken') : $('l-given')).checked = true;
+    $('l-kind').value = l ? (l.kind || 'cash') : (loanKind === 'recharge' ? 'recharge' : 'cash');
+    $('l-person').value = l ? l.person : '';
+    $('l-amount').value = l ? toBn(l.amount) : '';
+    $('l-date').value = l ? (l.date || ymd(today)) : ymd(today);
+    $('l-due').value = l ? (l.due || '') : '';
+    $('l-rtype').value = l ? (l.rtype || 'none') : 'none';
+    $('l-rate').value = l && l.rate ? toBn(l.rate) : '';
+    $('l-paid').value = l ? toBn(l.paid) : '';
+    $('l-paid-wrap').hidden = !l;
+    $('l-note').value = l ? (l.note || '') : '';
     $('l-err').textContent = '';
+    updLoanPrev();
     $('overlay2').hidden = false;
     setTimeout(function () { $('l-person').focus(); }, 30);
   }
-  function closeLoan() { $('overlay2').hidden = true; }
+  function closeLoan() { $('overlay2').hidden = true; loanEditId = null; }
+
+  function openRec(id) {
+    var r = state.recurring.filter(function (x) { return x.id === id; })[0];
+    if (!r) return;
+    recEditId = id;
+    var l = CATS[r.type].slice(); if (l.indexOf(r.cat) < 0) l.push(r.cat);
+    $('r-cat').innerHTML = l.map(function (c) { return '<option' + (c === r.cat ? ' selected' : '') + '>' + esc(c) + '</option>'; }).join('');
+    walletOptions('r-wallet', r.wallet);
+    $('r-amount').value = toBn(r.amount); $('r-day').value = toBn(r.day); $('r-note').value = r.note || '';
+    $('r-err').textContent = '';
+    $('overlay3').hidden = false;
+    setTimeout(function () { $('r-amount').focus(); }, 30);
+  }
+  function closeRec() { $('overlay3').hidden = true; recEditId = null; }
 
   /* ---------- events ---------- */
   document.addEventListener('click', function (e) {
     var T = e.target, el, id;
     if (T.id === 'overlay') { closeSheet(); return; }
     if (T.id === 'overlay2') { closeLoan(); return; }
+    if (T.id === 'overlay3') { closeRec(); return; }
     if (T.closest('#back')) { setPage('home'); return; }
     if (T.closest('#fab')) { openSheet(); return; }
     if ((el = T.closest('[data-go]'))) {
       if (el.hasAttribute('data-fset')) setFilterType(el.getAttribute('data-fset'));
+      if (el.hasAttribute('data-lk')) loanKind = el.getAttribute('data-lk');
+      else if (el.getAttribute('data-go') === 'loan') loanKind = 'all';
       setPage(el.getAttribute('data-go')); return;
+    }
+    if ((el = T.closest('[data-lk]'))) { loanKind = el.getAttribute('data-lk'); renderLoan(); return; }
+    if ((el = T.closest('[data-loan-edit]'))) { openLoan(el.getAttribute('data-loan-edit')); return; }
+    if ((el = T.closest('[data-rec-edit]'))) { openRec(el.getAttribute('data-rec-edit')); return; }
+    if ((el = T.closest('[data-goal-edit]'))) {
+      goalEditId = el.getAttribute('data-goal-edit'); goalAdding = false; goalPay = null; armedId = ''; renderGoal();
+      var ge = $('g-name'); if (ge) ge.focus();
+      return;
+    }
+    if ((el = T.closest('[data-note-edit]'))) {
+      noteEditId = el.getAttribute('data-note-edit'); armedId = ''; renderNotes();
+      var ne = $('note-edit-input'); if (ne) ne.focus();
+      return;
+    }
+    if (T.closest('[data-note-edit-cancel]')) { noteEditId = null; renderNotes(); return; }
+    if ((el = T.closest('[data-list-edit]'))) {
+      var pe = el.getAttribute('data-list-edit').split(':');
+      listEdit = { kind: pe[0], idx: +pe[1] }; armedId = ''; listMsg = {}; renderSettings();
+      var li = $('list-input'); if (li) { li.focus(); li.select(); }
+      return;
+    }
+    if ((el = T.closest('[data-list-add]'))) {
+      listEdit = { kind: el.getAttribute('data-list-add'), idx: -1 }; armedId = ''; listMsg = {}; renderSettings();
+      var la = $('list-input'); if (la) la.focus();
+      return;
+    }
+    if (T.closest('[data-list-cancel]')) { listEdit = null; renderSettings(); return; }
+    if ((el = T.closest('[data-list-del]'))) {
+      var pd = el.getAttribute('data-list-del').split(':'), kd = pd[0], ix = +pd[1], arr = listArr(kd), nm = arr[ix];
+      listEdit = null; listMsg = {};
+      if (armedId !== 'list:' + el.getAttribute('data-list-del')) { armedId = 'list:' + el.getAttribute('data-list-del'); renderSettings(); return; }
+      armedId = '';
+      if (arr.length <= 1) { listMsg = { kind: kd, text: 'অন্তত একটি থাকতে হবে।' }; renderSettings(); return; }
+      if (kd === 'wallet' && (state.tx.some(function (t) { return t.wallet === nm || t.to === nm; }) || state.recurring.some(function (r) { return r.wallet === nm; }))) {
+        listMsg = { kind: kd, text: 'এই ওয়ালেটে লেনদেন আছে, তাই মুছা যাবে না। চাইলে নাম বদলাতে পারেন।' }; renderSettings(); return;
+      }
+      arr.splice(ix, 1); applyLists(state); save(); renderAll(); return;
     }
     if (T.closest('[data-new-transfer]')) { openSheet(null, { type: 'transfer' }); return; }
     if (T.closest('[data-new-rec]')) { openSheet(null, { rec: true }); return; }
@@ -1130,7 +1414,7 @@ const db = initializeFirestore(app, { localCache: persistentLocalCache({ tabMana
     }
     if (T.id === 'wipe-btn') {
       if (!wipeArmed) { wipeArmed = true; T.textContent = 'নিশ্চিত, সব মুছে ফেলুন'; T.classList.add('armed'); return; }
-      state = { v: 3, tx: [], budget: 0, loans: [], goals: [], recurring: [], notes: [] };
+      state = migrate({ v: 3, tx: [], budget: 0, loans: [], goals: [], recurring: [], notes: [], wallets: state.wallets, cats: state.cats });
       wipeArmed = false; save(); setPage('home'); return;
     }
   });
@@ -1152,12 +1436,42 @@ const db = initializeFirestore(app, { localCache: persistentLocalCache({ tabMana
       if (!tx) { $('note-input').focus(); return; }
       state.notes.push({ id: 'n' + Date.now().toString(36), text: tx, date: ymd(new Date()) });
       save(); renderNotes();
+    } else if (f.hasAttribute('data-note-edit-form')) {
+      e.preventDefault();
+      var nt = $('note-edit-input').value.trim();
+      if (!nt) { $('note-edit-input').focus(); return; }
+      id = f.getAttribute('data-note-edit-form');
+      state.notes.forEach(function (n) { if (n.id === id) { n.text = nt; n.demo = false; } });
+      noteEditId = null; save(); renderNotes();
+    } else if (f.hasAttribute('data-list-form')) {
+      e.preventDefault();
+      var lk2 = f.getAttribute('data-list-form'), lidx = +f.getAttribute('data-idx'), larr = listArr(lk2), nn = $('list-input').value.trim();
+      if (!nn) { $('list-input').focus(); return; }
+      if (larr.some(function (x, i) { return x === nn && i !== lidx; })) { listMsg = { kind: lk2, text: 'এই নাম আগে থেকেই আছে।' }; renderSettings(); return; }
+      if (lidx < 0) larr.push(nn);
+      else {
+        var old = larr[lidx];
+        if (old !== nn) {
+          if (lk2 === 'wallet') {
+            state.tx.forEach(function (t) { if (t.wallet === old) t.wallet = nn; if (t.to === old) t.to = nn; });
+            state.recurring.forEach(function (r) { if (r.wallet === old) r.wallet = nn; });
+          } else {
+            state.tx.forEach(function (t) { if (t.type === lk2 && t.cat === old) t.cat = nn; });
+            state.recurring.forEach(function (r) { if (r.type === lk2 && r.cat === old) r.cat = nn; });
+          }
+          larr[lidx] = nn;
+        }
+      }
+      listEdit = null; listMsg = {}; applyLists(state); save(); renderAll();
     } else if (f.hasAttribute('data-pay-form')) {
       e.preventDefault();
       id = f.getAttribute('data-pay-form');
       var amt = num($('pay-input').value);
       state.loans.forEach(function (l) {
-        if (l.id === id && amt > 0) l.paid = Math.round(Math.min(l.amount, l.paid + amt) * 100) / 100;
+        if (l.id === id && amt > 0) {
+          l.paid = Math.round(Math.min(loanTotal(l), l.paid + amt) * 100) / 100;
+          if (loanRem(l) <= 0) l.fin = ymd(today);
+        }
       });
       loanPay = ''; save(); renderLoan(); renderHome();
     } else if (f.hasAttribute('data-goal-pay')) {
@@ -1175,7 +1489,15 @@ const db = initializeFirestore(app, { localCache: persistentLocalCache({ tabMana
       var name = $('g-name').value.trim(), target = num($('g-target').value);
       if (!name) { $('g-err').textContent = 'লক্ষ্যের একটি নাম লিখুন।'; $('g-name').focus(); return; }
       if (!(target > 0)) { $('g-err').textContent = 'কত টাকা জমাতে চান, পরিমাণ লিখুন।'; $('g-target').focus(); return; }
-      state.goals.push({ id: 'g' + Date.now().toString(36), name: name, target: Math.round(target), saved: 0, date: $('g-date').value });
+      if (goalEditId) {
+        var sv = $('g-saved') ? num($('g-saved').value) : 0;
+        state.goals.forEach(function (g) {
+          if (g.id === goalEditId) { g.name = name; g.target = Math.round(target); g.date = $('g-date').value; g.saved = sv > 0 ? r2(sv) : 0; g.demo = false; }
+        });
+        goalEditId = null;
+      } else {
+        state.goals.push({ id: 'g' + Date.now().toString(36), name: name, target: Math.round(target), saved: 0, date: $('g-date').value });
+      }
       goalAdding = false; save(); renderGoal(); renderHome();
     }
   });
@@ -1184,10 +1506,12 @@ const db = initializeFirestore(app, { localCache: persistentLocalCache({ tabMana
   $('next').addEventListener('click', function () { if (isCurrentMonth()) return; var d = new Date(view.y, view.m + 1, 1); view.y = d.getFullYear(); view.m = d.getMonth(); renderAll(); });
   $('f-cancel').addEventListener('click', closeSheet);
   $('l-cancel').addEventListener('click', closeLoan);
+  $('r-cancel').addEventListener('click', closeRec);
   document.addEventListener('keydown', function (e) {
     if (e.key !== 'Escape') return;
     if (!$('overlay').hidden) closeSheet();
     if (!$('overlay2').hidden) closeLoan();
+    if (!$('overlay3').hidden) closeRec();
   });
 
   document.querySelectorAll('input[name="ftype"]').forEach(function (r) {
@@ -1239,15 +1563,50 @@ const db = initializeFirestore(app, { localCache: persistentLocalCache({ tabMana
 
   $('loan-form').addEventListener('submit', function (e) {
     e.preventDefault();
-    var person = $('l-person').value.trim(), amt = num($('l-amount').value);
+    var person = $('l-person').value.trim(), amt = num($('l-amount').value), rt = $('l-rtype').value, rate = num($('l-rate').value) || 0;
     if (!person) { $('l-err').textContent = 'কার সাথে লেনদেন, নামটি লিখুন।'; $('l-person').focus(); return; }
     if (!(amt > 0)) { $('l-err').textContent = 'পরিমাণ লিখুন। শূন্যের বেশি হতে হবে।'; $('l-amount').focus(); return; }
-    state.loans.push({
-      id: 'l' + Date.now().toString(36) + Math.floor(Math.random() * 1000),
-      dir: document.querySelector('input[name="ldir"]:checked').value,
-      person: person, amount: Math.round(amt * 100) / 100, paid: 0, due: $('l-due').value, note: $('l-note').value.trim()
-    });
+    if (rt !== 'none' && !(rate > 0)) { $('l-err').textContent = 'সুদ বা চার্জের হার লিখুন।'; $('l-rate').focus(); return; }
+    var o = {
+      dir: document.querySelector('input[name="ldir"]:checked').value, kind: $('l-kind').value,
+      person: person, amount: r2(amt), date: $('l-date').value || ymd(today), rtype: rt, rate: rt === 'none' ? 0 : rate,
+      due: $('l-due').value, note: $('l-note').value.trim()
+    };
+    if (loanEditId) {
+      var pd2 = Math.max(0, num($('l-paid').value) || 0);
+      state.loans.forEach(function (l) {
+        if (l.id !== loanEditId) return;
+        Object.assign(l, o); l.demo = false; delete l.fin;
+        l.paid = r2(Math.min(pd2, loanTotal(l)));
+        if (loanRem(l) <= 0) l.fin = ymd(today);
+      });
+    } else {
+      o.id = 'l' + Date.now().toString(36) + Math.floor(Math.random() * 1000); o.paid = 0;
+      state.loans.push(o);
+    }
     save(); closeLoan(); renderAll();
+  });
+  ['l-amount', 'l-rate', 'l-date', 'l-due', 'l-rtype', 'l-kind'].forEach(function (id) {
+    $(id).addEventListener('input', updLoanPrev); $(id).addEventListener('change', updLoanPrev);
+  });
+  document.addEventListener('input', function (e) {
+    var id = e.target && e.target.id;
+    if (id && /^c[123]-/.test(id)) calcUpdate(id);
+  });
+  document.addEventListener('change', function (e) {
+    var id = e.target && e.target.id;
+    if (id === 'c1-t') calcUpdate(id);
+  });
+  $('rec-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var amt = num($('r-amount').value), day = Math.round(num($('r-day').value));
+    if (!(amt > 0)) { $('r-err').textContent = 'পরিমাণ লিখুন। শূন্যের বেশি হতে হবে।'; $('r-amount').focus(); return; }
+    if (!(day >= 1 && day <= 28)) { $('r-err').textContent = 'তারিখ ১ থেকে ২৮-এর মধ্যে লিখুন।'; $('r-day').focus(); return; }
+    state.recurring.forEach(function (r) {
+      if (r.id !== recEditId) return;
+      r.amount = r2(amt); r.cat = $('r-cat').value; r.wallet = $('r-wallet').value; r.day = day; r.note = $('r-note').value.trim(); r.demo = false;
+    });
+    save(); closeRec(); renderAll();
   });
 
   /* ---------- Firebase sync ---------- */
@@ -1295,7 +1654,7 @@ const db = initializeFirestore(app, { localCache: persistentLocalCache({ tabMana
       });
       track(batch.commit());
     }
-    var m = JSON.stringify({ budget: state.budget || 0, all: !!state.all });
+    var m = metaJson();
     if (m !== lastMeta) {
       lastMeta = m;
       track(setDoc(doc(db, 'users', uid, 'meta', 'settings'), JSON.parse(m), { merge: true }));
@@ -1353,7 +1712,10 @@ const db = initializeFirestore(app, { localCache: persistentLocalCache({ tabMana
     unsubs.push(onSnapshot(doc(db, 'users', uid, 'meta', 'settings'), function (snap) {
       var d = snap.exists() ? snap.data() : {};
       state.budget = d.budget || 0; state.all = !!d.all;
-      lastMeta = JSON.stringify({ budget: state.budget, all: state.all });
+      state.wallets = (d.wallets && d.wallets.length) ? d.wallets : DEFW.slice();
+      state.cats = (d.cats && d.cats.income && d.cats.expense) ? { income: d.cats.income, expense: d.cats.expense } : defCats();
+      applyLists(state);
+      lastMeta = metaJson();
       loaded.meta = true;
       onData(snap.metadata.hasPendingWrites);
     }, onListenErr));
@@ -1389,6 +1751,9 @@ const db = initializeFirestore(app, { localCache: persistentLocalCache({ tabMana
   window.addEventListener('offline', updateSync);
 
   document.querySelectorAll('[data-ic]').forEach(function (el) { el.innerHTML = ic(el.getAttribute('data-ic')); });
+  document.querySelectorAll('.logo-img').forEach(function (im) { im.src = LOGO; });
+  var fav = document.querySelector('link[rel="icon"]'); if (fav) fav.setAttribute('href', LOGO);
+  var tch = document.createElement('link'); tch.rel = 'apple-touch-icon'; tch.href = LOGO; document.head.appendChild(tch);
   startAuth();
 })();
 
