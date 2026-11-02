@@ -2,7 +2,7 @@
 <html lang="bn">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#164E7F">
 <title>টাকার খাতা</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23164E7F'/%3E%3Cpath d='M16 22h30v8M16 22v22h32V30H16' fill='none' stroke='%23fff' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
@@ -308,6 +308,77 @@ textarea { min-height: 84px; resize: vertical; font-size: 14px; }
 .calc-out .r { display: flex; justify-content: space-between; gap: 12px; }
 .calc-out .r b { font-family: var(--font-display); }
 .calc-out .r.big { font-size: 1.08em; }
+
+/* ---- বইয়ের মতো স্পষ্ট লেখা ও সাদা হেডার ---- */
+html { touch-action: manipulation; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+button, a, label, select { touch-action: manipulation; }
+:root { --bg: #F3F6FA; --ink: #0E1A28; --muted: #3E5066; --line: #C5D0DD; }
+body { font-size: 17px; line-height: 1.6; }
+.bar { background: var(--surface); color: var(--ink); border-radius: 0; border-bottom: 1px solid var(--line); padding-bottom: 12px; }
+.bar h1 { color: var(--brand); font-size: 23px; }
+.bar .logo, .bar .back { background: var(--tint); color: var(--brand); }
+.bar .kicker { color: var(--muted); font-size: 13.5px; }
+.months { background: var(--tint); color: var(--brand); }
+.muted { font-size: 15px; }
+.card h2, .sec { font-size: 19px; }
+.field label { font-size: 15px; color: var(--ink); font-weight: 500; }
+input[type="text"], input[type="date"], select, textarea { font-size: 17px; min-height: 48px; border-color: var(--line); }
+.tl { font-size: 15px; }
+.tv { font-size: 20px; }
+.sc { font-size: 13.5px; }
+.tx-cat { font-size: 17px; }
+.tx-sub { font-size: 14px; color: var(--muted); }
+.nv { font-size: 13px; }
+.al { font-size: 16px; }
+.item .nm { font-size: 17px; }
+.bal-w { display: grid; grid-template-columns: repeat(auto-fit, minmax(96px, 1fr)); gap: 8px; border-top: 0; padding-top: 0; }
+.bal-w span { background: rgba(255,255,255,.14); border-radius: 12px; padding: 8px 10px; display: flex; flex-direction: column; font-size: 14px; color: var(--brand-sub); }
+.bal-w b { font-size: 16px; }
+.sec { font-family: var(--font-display); margin: 4px 0 -4px; }
+.rgrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+.rt { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 16px 4px; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; font-weight: 500; font-size: 14.5px; text-align: center; color: var(--ink); }
+.rt .w { width: 48px; height: 48px; border-radius: 12px; display: grid; place-items: center; }
+.rt.c1 .w { background: #E3EBFF; color: #2F55C9; } .rt.c2 .w { background: #DDF3EE; color: #0F766E; } .rt.c3 .w { background: #E1F3E7; color: #15803D; }
+.rt.c4 .w { background: #FBEBD3; color: #B45309; } .rt.c5 .w { background: #FBE6E3; color: #B42318; } .rt.c6 .w { background: #ECE6FB; color: #6D3FC9; }
+.rt.c7 .w { background: #E0EFFB; color: #1F6FB0; } .rt.c8 .w { background: #FDF1D0; color: #A16207; } .rt.c9 .w { background: #E8ECF1; color: #475569; }
+.bigcard .n { font-size: 15px; color: var(--muted); }
+.bigcard .bigv { font-family: var(--font-display); font-weight: 700; font-size: 30px; }
+.bigcard.recv { background: var(--inc-bg); } .bigcard.owe { background: var(--exp-bg); }
+.book { width: 100%; border-collapse: collapse; font-size: 15.5px; }
+.book th { text-align: left; font-weight: 600; font-size: 14px; color: var(--muted); border-bottom: 2px solid var(--ink); padding: 8px 6px; white-space: nowrap; }
+.book td { padding: 10px 6px; border-bottom: 1px solid var(--line); vertical-align: top; overflow-wrap: anywhere; }
+.book .r { text-align: right; white-space: nowrap; }
+.book small { display: block; color: var(--muted); font-size: 13px; }
+.book tr.tot td { font-weight: 700; border-top: 2px solid var(--ink); border-bottom: 0; }
+.book .cr { color: var(--inc); } .book .dr { color: var(--exp); }
+.sumrow { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.sumrow > div { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 10px 6px; text-align: center; }
+.sumrow .n { font-size: 14px; color: var(--muted); } .sumrow .v { font-family: var(--font-display); font-weight: 700; font-size: 18px; overflow-wrap: anywhere; }
+.plist { display: flex; flex-direction: column; gap: 10px; }
+.prow { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 12px; align-items: center; width: 100%; text-align: left; border: 1px solid var(--line); border-radius: 14px; padding: 12px 14px; background: var(--surface); color: var(--ink); }
+.prow.recv { background: var(--inc-bg); border-color: transparent; } .prow.owe { background: var(--exp-bg); border-color: transparent; }
+.av { width: 42px; height: 42px; border-radius: 12px; display: grid; place-items: center; font-weight: 700; color: #fff; background: var(--muted); }
+.prow.recv .av { background: var(--inc); } .prow.owe .av { background: var(--exp); }
+.pmain { display: flex; flex-direction: column; min-width: 0; } .pnm { font-weight: 600; overflow-wrap: anywhere; } .psub { font-size: 13.5px; color: var(--muted); }
+.pamt { font-family: var(--font-display); font-weight: 700; white-space: nowrap; text-align: right; } .pamt small { display: block; font-size: 13px; font-weight: 500; color: var(--muted); }
+.pbar { position: sticky; bottom: 96px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.pbar button { min-height: 52px; border: 0; border-radius: 14px; font-weight: 700; font-size: 18px; color: #fff; box-shadow: 0 4px 12px rgba(0,0,0,.18); }
+.pbar .got { background: var(--inc); } .pbar .give { background: var(--exp); }
+.mrow { display: flex; align-items: center; gap: 12px; width: 100%; padding: 12px 2px; border: 0; border-bottom: 1px solid var(--line); background: transparent; text-align: left; font-size: 17px; color: var(--ink); }
+.mrow:last-child { border-bottom: 0; }
+.mrow .w { width: 40px; height: 40px; border-radius: 10px; background: var(--tint); color: var(--accent); display: grid; place-items: center; flex: none; }
+.mrow .ch { margin-left: auto; color: var(--muted); } .mrow .ch .ic { width: 18px; height: 18px; }
+.alerts-flat { display: flex; flex-direction: column; gap: 14px; }
+.print-head { display: none; }
+@media print {
+  .bar, .nav, #login, .no-print, .foot, .note, .pbar { display: none !important; }
+  body { background: #fff; color: #000; padding: 0; }
+  .panel { display: none !important; }
+  #v-rep:not([hidden]), #v-person:not([hidden]) { display: flex !important; }
+  .card { border: 0; padding: 0; background: #fff; }
+  .print-head { display: block !important; margin-bottom: 8px; }
+  .content { padding: 0; }
+}
 </style>
 </head>
 <body>
@@ -374,6 +445,9 @@ textarea { min-height: 84px; resize: vertical; font-size: 14px; }
       <div id="v-rec" class="panel" hidden></div>
       <div id="v-notes" class="panel" hidden></div>
       <div id="v-calc" class="panel" hidden></div>
+      <div id="v-notice" class="panel" hidden></div>
+      <div id="v-person" class="panel" hidden></div>
+      <div id="v-rep" class="panel" hidden></div>
     </main>
 
     <p class="foot">আপনার তথ্য আপনার Google অ্যাকাউন্টের সঙ্গে সার্ভারে সেভ থাকে।</p>
@@ -383,10 +457,10 @@ textarea { min-height: 84px; resize: vertical; font-size: 14px; }
 <nav class="nav" id="navbar" aria-label="প্রধান মেনু" hidden>
   <div class="in">
     <button type="button" class="nv" data-go="home" aria-current="page"><span data-ic="home"></span>হোম</button>
-    <button type="button" class="nv" data-go="tx"><span data-ic="list"></span>লেনদেন</button>
+    <button type="button" class="nv" data-go="notice"><span data-ic="bell"></span>নোটিশ</button>
     <div><button type="button" class="add" id="fab" aria-label="নতুন এন্ট্রি যোগ করুন"><span data-ic="plus"></span></button></div>
     <button type="button" class="nv" data-go="report"><span data-ic="chart"></span>রিপোর্ট</button>
-    <button type="button" class="nv" data-go="settings"><span data-ic="sliders"></span>সেটিংস</button>
+    <button type="button" class="nv" data-go="settings"><span data-ic="more"></span>আরও</button>
   </div>
 </nav>
 
@@ -431,6 +505,7 @@ textarea { min-height: 84px; resize: vertical; font-size: 14px; }
     </div>
     <div class="field"><label for="l-kind">কিসের বাকি</label><select id="l-kind"><option value="cash">টাকা ধার বা হাওলাত</option><option value="recharge">রিচার্জ বাকি</option></select></div>
     <div class="field"><label for="l-person">কার সাথে</label><input type="text" id="l-person" placeholder="নাম লিখুন" autocomplete="off"></div>
+    <div class="field"><label for="l-phone">মোবাইল নম্বর (ইচ্ছা হলে)</label><input type="text" id="l-phone" inputmode="tel" placeholder="০১৭XXXXXXXX" autocomplete="off"></div>
     <div class="field"><label for="l-amount">পরিমাণ (টাকা)</label><input type="text" id="l-amount" class="amt" inputmode="decimal" placeholder="০" autocomplete="off"></div>
     <div class="grid2">
       <div class="field"><label for="l-date">দেওয়ার তারিখ</label><input type="date" id="l-date"></div>
@@ -510,9 +585,12 @@ const db = initializeFirestore(app, { localCache: persistentLocalCache({ tabMana
   function applyLists(s) { WALLETS = s.wallets; CATS = s.cats; ALLCATS = CATS.income.concat(CATS.expense); }
   function metaJson() { return JSON.stringify({ budget: state.budget || 0, all: !!state.all, wallets: state.wallets, cats: { income: state.cats.income, expense: state.cats.expense } }); }
   function defCats() { return { income: DEFC.income.slice(), expense: DEFC.expense.slice() }; }
-  var MAIN = ['home', 'tx', 'report', 'settings'];
-  var SHOWMONTH = ['home', 'tx', 'report'];
-  var TITLES = { home: 'টাকার খাতা', tx: 'লেনদেন', report: 'রিপোর্ট', settings: 'সেটিংস', wallet: 'ওয়ালেট', loan: 'ধার-বাকি', goal: 'সঞ্চয় লক্ষ্য', budget: 'মাসের বাজেট', rec: 'নিয়মিত খরচ', notes: 'নোট', calc: 'সুদ ও রিচার্জ হিসাব' };
+  var MAIN = ['home', 'notice', 'report', 'settings'];
+  var SHOWMONTH = ['home', 'tx'];
+  var REPKEYS = ['rbook', 'rbank', 'rinc', 'rexp', 'rtr', 'rfin'];
+  var BACKTO = { person: 'loan', rbook: 'report', rbank: 'report', rinc: 'report', rexp: 'report', rtr: 'report', rfin: 'report' };
+  function panelOf(p) { return REPKEYS.indexOf(p) >= 0 ? 'rep' : p; }
+  var TITLES = { home: 'টাকার খাতা', tx: 'লেনদেন', report: 'ব্যক্তিগত রিপোর্ট', settings: 'আরও', wallet: 'ওয়ালেট', loan: 'দেনা/পাওনা', goal: 'সঞ্চয় লক্ষ্য', budget: 'মাসের বাজেট', rec: 'নিয়মিত খরচ', notes: 'নোট', calc: 'সুদ ও রিচার্জ হিসাব', notice: 'নোটিশ', person: '', rbook: 'ক্যাশ বুক', rbank: 'ব্যাংক বুক', rinc: 'আয়ের বিবরণী', rexp: 'ব্যয়ের বিবরণী', rtr: 'ট্রান্সফার বিবরণী', rfin: 'আর্থিক বিবরণী' };
   var ICONS = {
     home: 'M3 11l9-8 9 8M5 10v10h5v-6h4v6h5V10',
     list: 'M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01',
@@ -530,6 +608,12 @@ const db = initializeFirestore(app, { localCache: persistentLocalCache({ tabMana
     notes: 'M6 3h9l4 4v14H6zM14 3v5h5M9 13h7M9 17h7',
     wallet: 'M3 7a2 2 0 0 1 2-2h13v4M3 7v11a2 2 0 0 0 2 2h15V9H5a2 2 0 0 1-2-2zM16 14.5h.01',
     bell: 'M6 16v-5a6 6 0 0 1 12 0v5l2 2H4zM10 21h4',
+    more: 'M5 12h.01M12 12h.01M19 12h.01',
+    book: 'M5 4h12a2 2 0 0 1 2 2v14H7a2 2 0 0 1-2-2zM5 18a2 2 0 0 1 2-2h12',
+    bank: 'M3 10l9-6 9 6M5 10v8M9 10v8M15 10v8M19 10v8M3 20h18',
+    down: 'M12 5v14M6 13l6 6 6-6',
+    up: 'M12 19V5M6 11l6-6 6 6',
+    doc: 'M6 3h9l4 4v14H6zM9 12h7M9 16h7',
     percent: 'M19 5L5 19M7.5 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM16.5 18a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z',
     phone: 'M8 3h8a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zM11 18h2'
   };
@@ -711,7 +795,7 @@ const db = initializeFirestore(app, { localCache: persistentLocalCache({ tabMana
   }
 
   /* ---------- home ---------- */
-  function buildAlerts() {
+  function buildAlerts(all) {
     var a = [];
     state.loans.forEach(function (l) {
       var rem = loanRem(l);
@@ -727,7 +811,7 @@ const db = initializeFirestore(app, { localCache: persistentLocalCache({ tabMana
     state.goals.forEach(function (g) {
       if (g.date && g.saved < g.target && daysUntil(g.date) < 0) a.push({ c: 'info', t: '"' + esc(g.name) + '" লক্ষ্যের সময় পেরিয়ে গেছে' });
     });
-    return a.slice(0, 3);
+    return all ? a : a.slice(0, 3);
   }
 
   function renderHome() {
@@ -761,11 +845,11 @@ const db = initializeFirestore(app, { localCache: persistentLocalCache({ tabMana
       h += '<section class="alerts" aria-label="নোটিশ"><h2>নোটিশ</h2>' + al.map(function (x) { return '<div class="al ' + x.c + '"><i></i><span>' + x.t + '</span></div>'; }).join('') + '</section>';
     }
 
-    var sc = [['loan', 'ধার-বাকি', 'loan'], ['rcl', 'রিচার্জ বাকি', 'phone'], ['calc', 'সুদ ও রিচার্জ হিসাব', 'percent'], ['goal', 'সঞ্চয়', 'target'],
-      ['budget', 'বাজেট', 'budget'], ['rec', 'নিয়মিত', 'repeat'], ['transfer', 'ওয়ালেট ট্রান্সফার', 'swap'], ['notes', 'নোট', 'notes'],
-      ['wallet', 'ওয়ালেট', 'wallet'], ['report', 'রিপোর্ট', 'chart']];
-    h += '<div class="shortcuts">' + sc.map(function (s) {
-      var attr = s[0] === 'transfer' ? 'data-new-transfer="1"' : s[0] === 'rcl' ? 'data-go="loan" data-lk="recharge"' : 'data-go="' + s[0] + '"';
+    var sc = [['addin', 'আয় যোগ', 'plus'], ['addex', 'খরচ যোগ', 'minus'], ['transfer', 'ফান্ড ট্রান্সফার', 'swap'], ['loan', 'দেনা/পাওনা', 'loan'],
+      ['rcl', 'রিচার্জ বাকি', 'phone'], ['calc', 'সুদ ও রিচার্জ হিসাব', 'percent'], ['goal', 'সঞ্চয়', 'target'], ['budget', 'বাজেট', 'budget'],
+      ['rec', 'নিয়মিত', 'repeat'], ['notes', 'নোট', 'notes'], ['wallet', 'ওয়ালেট', 'wallet'], ['report', 'রিপোর্ট', 'chart']];
+    h += '<h2 class="sec">দ্রুত কাজ</h2><div class="shortcuts">' + sc.map(function (s) {
+      var attr = s[0] === 'addin' ? 'data-new-type="income"' : s[0] === 'addex' ? 'data-new-type="expense"' : s[0] === 'transfer' ? 'data-new-transfer="1"' : s[0] === 'rcl' ? 'data-go="loan" data-lk="recharge"' : 'data-go="' + s[0] + '"';
       return '<button type="button" class="sc" ' + attr + '><span class="w">' + ic(s[2]) + '</span>' + s[1] + '</button>';
     }).join('') + '</div>';
 
@@ -871,23 +955,89 @@ const db = initializeFirestore(app, { localCache: persistentLocalCache({ tabMana
     }
     return h + '</div>';
   }
-  function renderLoan() {
-    function lk(k, t) { return '<button type="button" data-lk="' + k + '" aria-pressed="' + (loanKind === k) + '">' + t + '</button>'; }
-    var recv = 0, owe = 0, active = [], done = [];
+  var personName = '', personPay = '', personQ = '';
+  function personTotals(name) {
+    var t = { recv: 0, owe: 0, phone: '' };
+    state.loans.forEach(function (l) {
+      if (l.person !== name) return;
+      var r = Math.max(0, loanRem(l));
+      if (l.dir === 'given') t.recv += r; else t.owe += r;
+      if (l.phone) t.phone = l.phone;
+    });
+    return t;
+  }
+  function personGroups() {
+    var map = {}, order = [];
     state.loans.forEach(function (l) {
       if (loanKind !== 'all' && (l.kind || 'cash') !== loanKind) return;
-      var rem = loanRem(l);
-      if (rem > 0) { active.push(l); if (l.dir === 'given') recv += rem; else owe += rem; } else done.push(l);
+      if (!map[l.person]) { map[l.person] = { name: l.person, phone: '', recv: 0, owe: 0, n: 0 }; order.push(l.person); }
+      var g = map[l.person], r = Math.max(0, loanRem(l));
+      g.n++;
+      if (l.phone) g.phone = l.phone;
+      if (l.dir === 'given') g.recv += r; else g.owe += r;
     });
-    active.sort(function (a, b) { return (a.due || '9999') < (b.due || '9999') ? -1 : 1; });
-    var h = '<section class="card"><div class="seg" role="group" aria-label="ধরন">' + lk('all', 'সব') + lk('cash', 'ধার-হাওলাত') + lk('recharge', 'রিচার্জ বাকি') + '</div>' +
-      '<div class="sum2"><div><div class="n">পাবো</div><div class="v pos">' + money(recv) + '</div></div><div><div class="n">দেবো</div><div class="v neg">' + money(owe) + '</div></div></div>' +
-      '<div><button type="button" class="btn" data-loan-add="1">নতুন ধার-বাকি যোগ করুন</button></div>' +
-      '<div><button type="button" class="btn ghost" data-go="calc">সুদ ও রিচার্জ হিসাব করুন</button></div>' +
-      '<p class="muted">এই হিসাব ওয়ালেটের ব্যালেন্স থেকে আলাদা।</p></section>';
-    h += '<section class="card"><h2>চলমান</h2>' + (active.length ? '<div>' + active.map(loanItem).join('') + '</div>' : '<p class="muted">কোনো বাকি নেই।</p>') + '</section>';
-    if (done.length) h += '<section class="card"><h2>মিটে গেছে</h2><div>' + done.map(loanItem).join('') + '</div></section>';
+    return order.map(function (k) { var g = map[k]; g.net = r2(g.recv - g.owe); return g; });
+  }
+  function personListHtml() {
+    var q = personQ.trim().toLowerCase();
+    var gs = personGroups().filter(function (g) { return !q || (g.name + ' ' + g.phone).toLowerCase().indexOf(q) >= 0; });
+    gs.sort(function (a, b) { return (Math.abs(b.net) - Math.abs(a.net)) || (a.name < b.name ? -1 : 1); });
+    if (!gs.length) return '<div class="empty"><span>কোনো খাতা নেই।</span></div>';
+    return gs.map(function (g) {
+      var cls = g.net > 0 ? 'recv' : g.net < 0 ? 'owe' : 'zero';
+      return '<button type="button" class="prow ' + cls + '" data-person="' + esc(g.name) + '"><span class="av">' + esc(Array.from(g.name)[0] || '?') + '</span>' +
+        '<span class="pmain"><span class="pnm">' + esc(g.name) + '</span><span class="psub">' + (g.phone ? esc(g.phone) + ' · ' : '') + toBn(g.n) + 'টি লেনদেন</span></span>' +
+        '<span class="pamt ' + (g.net > 0 ? 'pos' : g.net < 0 ? 'neg' : '') + '">' + (g.net === 0 ? '৳০<small>মিটে গেছে</small>' : money(Math.abs(g.net)) + '<small>' + (g.net > 0 ? 'পাবো' : 'দেবো') + '</small>') + '</span></button>';
+    }).join('');
+  }
+  function renderLoan() {
+    function lk(k, t) { return '<button type="button" data-lk="' + k + '" aria-pressed="' + (loanKind === k) + '">' + t + '</button>'; }
+    var gs = personGroups(), recv = 0, owe = 0;
+    gs.forEach(function (g) { recv += g.recv; owe += g.owe; });
+    var h = '<div class="sumrow"><div><div class="n">আমি পাবো</div><div class="v pos">' + money(recv) + '</div></div>' +
+      '<div><div class="n">মোট দিবো</div><div class="v neg">' + money(owe) + '</div></div>' +
+      '<div><div class="n">মোট ব্যক্তি</div><div class="v">' + toBn(gs.length) + '</div></div></div>' +
+      '<section class="card"><div class="seg" role="group" aria-label="ধরন">' + lk('all', 'সব') + lk('cash', 'ধার-হাওলাত') + lk('recharge', 'রিচার্জ বাকি') + '</div>' +
+      '<div class="field"><input type="text" id="pq" aria-label="নাম বা নম্বর দিয়ে খুঁজুন" placeholder="নাম বা নম্বর দিয়ে খুঁজুন" value="' + esc(personQ) + '" autocomplete="off"></div>' +
+      '<div class="plist" id="plist">' + personListHtml() + '</div></section>' +
+      '<div class="actions"><button type="button" class="btn" data-loan-add="1">নতুন ধার-বাকি যোগ করুন</button><button type="button" class="btn ghost" data-go="calc">সুদ ও রিচার্জ হিসাব</button></div>' +
+      '<p class="muted">এই হিসাব ওয়ালেটের ব্যালেন্স থেকে আলাদা।</p>';
     $('v-loan').innerHTML = h;
+    renderPerson();
+  }
+  function renderPerson() {
+    if (page !== 'person') return;
+    var ents = state.loans.filter(function (l) { return l.person === personName; }).sort(function (a, b) { return (a.date || '') < (b.date || '') ? 1 : -1; });
+    var t = personTotals(personName), net = r2(t.recv - t.owe);
+    var h = '<div class="print-head"><h2>টাকার খাতা — ' + esc(personName) + '</h2></div>' +
+      '<section class="card bigcard ' + (net > 0 ? 'recv' : net < 0 ? 'owe' : '') + '"><div class="n">' + (net > 0 ? 'আমি পাবো' : net < 0 ? 'আমি দেবো' : 'হিসাব মিটে গেছে') + '</div>' +
+      '<div class="bigv ' + (net > 0 ? 'pos' : net < 0 ? 'neg' : '') + '">' + money(Math.abs(net)) + '</div>' +
+      (t.phone ? '<div class="muted">মোবাইল: ' + esc(t.phone) + '</div>' : '') +
+      '<div class="muted">পাবো ' + money(t.recv) + ' · দেবো ' + money(t.owe) + '</div></section>';
+    if (personPay) {
+      h += '<form class="card no-print" data-ppay-form="' + personPay + '" novalidate><h2>' + (personPay === 'got' ? 'কত টাকা পেলেন' : 'কত টাকা দিলেন') + '</h2>' +
+        '<div class="field"><input type="text" id="pp-input" class="amt" inputmode="decimal" placeholder="০" aria-label="টাকার পরিমাণ" autocomplete="off"></div>' +
+        '<p class="muted">' + (personPay === 'got' ? 'আগের পাওনা থেকে পুরনো হিসাব আগে কাটা যাবে।' : 'আগের দেনা থেকে পুরনো হিসাব আগে কাটা যাবে।') + '</p><div class="err" id="pp-err" role="alert"></div>' +
+        '<div class="actions"><button type="submit" class="btn">সংরক্ষণ</button><button type="button" class="btn ghost" data-ppay-cancel="1">বাতিল</button></div></form>';
+    }
+    h += '<section class="card"><h2>লেনদেনের খাতা</h2>' + (ents.length ? '<div>' + ents.map(loanItem).join('') + '</div>' : '<p class="muted">কোনো লেনদেন নেই।</p>') + '</section>' +
+      '<div class="pbar no-print"><button type="button" class="got" data-pgot="1">পেলাম</button><button type="button" class="give" data-pgive="1">দিলাম</button></div>';
+    $('v-person').innerHTML = h;
+  }
+  function applyPersonPay(mode, amt) {
+    var opp = mode === 'give' ? 'taken' : 'given', phone = personTotals(personName).phone;
+    state.loans.filter(function (l) { return l.person === personName && l.dir === opp && loanRem(l) > 0; })
+      .sort(function (a, b) { return (a.date || '') < (b.date || '') ? -1 : 1; })
+      .forEach(function (l) {
+        if (amt <= 0) return;
+        var take = Math.min(amt, loanRem(l));
+        l.paid = r2(l.paid + take); amt = r2(amt - take);
+        if (loanRem(l) <= 0) l.fin = ymd(today);
+      });
+    if (amt > 0) {
+      state.loans.push({ id: 'l' + Date.now().toString(36) + Math.floor(Math.random() * 1000), dir: mode === 'give' ? 'given' : 'taken', kind: 'cash', person: personName, phone: phone,
+        amount: r2(amt), paid: 0, date: ymd(today), rtype: 'none', rate: 0, due: '', note: '' });
+    }
   }
 
   /* ---------- goals ---------- */
@@ -1095,6 +1245,11 @@ const db = initializeFirestore(app, { localCache: persistentLocalCache({ tabMana
   /* ---------- settings ---------- */
   function renderSettings() {
     var h = '';
+    var MENU = [['wallet', 'ওয়ালেট', 'wallet'], ['loan', 'দেনা/পাওনা (ধার-বাকি)', 'loan'], ['calc', 'সুদ ও রিচার্জ হিসাব', 'percent'], ['goal', 'সঞ্চয় লক্ষ্য', 'target'],
+      ['budget', 'মাসের বাজেট', 'budget'], ['rec', 'নিয়মিত খরচ', 'repeat'], ['notes', 'নোট', 'notes'], ['tx', 'সব লেনদেনের তালিকা', 'list']];
+    h += '<section class="card"><h2>মেনু</h2><div>' + MENU.map(function (m) {
+      return '<button type="button" class="mrow" data-go="' + m[0] + '"><span class="w">' + ic(m[2]) + '</span>' + m[1] + '<span class="ch">' + ic('fwd') + '</span></button>';
+    }).join('') + '</div></section>';
     h += '<section class="card"><h2>অ্যাকাউন্ট</h2><div><div class="nm">' + esc((user && (user.displayName || '')) || '') + '</div><div class="muted">' + esc((user && user.email) || '') + '</div></div>' +
       '<p class="muted" id="sync-line">' + syncText() + '</p><div><button type="button" class="btn ghost" id="signout-btn">লগআউট</button></div></section>';
     if (anyDemo()) {
@@ -1147,24 +1302,120 @@ const db = initializeFirestore(app, { localCache: persistentLocalCache({ tabMana
     return '<svg class="chart" viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="গত ছয় মাসের আয় ও ব্যয়ের তুলনা">' + s + '</svg>';
   }
   function renderReport() {
-    var list = monthTx();
-    var inc = sum(list, 'income'), exp = sum(list, 'expense'), saved = inc - exp;
-    var rate = inc > 0 ? Math.round(saved / inc * 100) : null;
-    var stats = '<section class="card"><h2>' + MONTHS[view.m] + ' মাসের হিসাব</h2><div class="stats">' +
-      '<div><div class="n">আয়</div><div class="v pos">' + money(inc) + '</div></div>' +
-      '<div><div class="n">ব্যয়</div><div class="v neg">' + money(exp) + '</div></div>' +
-      '<div><div class="n">সঞ্চয়</div><div class="v ' + (saved < 0 ? 'neg' : '') + '">' + money(saved) + '</div></div></div>' +
-      (rate !== null ? '<p class="muted">আয়ের ' + toBn(rate) + '% সঞ্চয় হয়েছে।</p>' : '') + '</section>';
-    var totals = {};
-    list.forEach(function (t) { if (t.type === 'expense') totals[t.cat] = (totals[t.cat] || 0) + t.amount; });
-    var cats = Object.keys(totals).sort(function (a, b) { return totals[b] - totals[a]; });
-    var maxC = cats.length ? totals[cats[0]] : 1;
-    var bd = '<section class="card"><h2>কোথায় কত খরচ</h2>' + (cats.length ? cats.map(function (c) {
-      return '<div class="cat"><div class="h"><span>' + esc(c) + '</span><span>' + money(totals[c]) + ' · ' + toBn(Math.round(totals[c] / exp * 100)) + '%</span></div>' +
-        '<div class="bar2"><i style="width:' + (totals[c] / maxC * 100) + '%"></i></div></div>';
-    }).join('') : '<p class="muted">এই মাসে কোনো ব্যয় নেই।</p>') + '</section>';
-    var ch = '<section class="card"><h2>গত ছয় মাস</h2><div class="legend"><span><i style="background:var(--inc)"></i>আয়</span><span><i style="background:var(--exp)"></i>ব্যয়</span></div><div class="scroll-x">' + chartSvg() + '</div></section>';
-    $('v-report').innerHTML = stats + bd + ch;
+    var T = [['rbook', 'ক্যাশ বুক', 'book', 'c1'], ['rbank', 'ব্যাংক বুক', 'bank', 'c2'], ['rinc', 'আয়ের বিবরণী', 'down', 'c3'], ['rexp', 'ব্যয়ের বিবরণী', 'up', 'c4'],
+      ['rtr', 'ট্রান্সফার বিবরণী', 'swap', 'c5'], ['rfin', 'আর্থিক বিবরণী', 'doc', 'c6'], ['loan', 'দেনা/পাওনা', 'loan', 'c7'], ['goal', 'সঞ্চয় লক্ষ্য', 'target', 'c8'], ['budget', 'বাজেট', 'budget', 'c9']];
+    $('v-report').innerHTML = '<div class="rgrid">' + T.map(function (t) {
+      return '<button type="button" class="rt ' + t[3] + '" data-go="' + t[0] + '"><span class="w">' + ic(t[2]) + '</span>' + t[1] + '</button>';
+    }).join('') + '</div>';
+  }
+
+  /* ---------- report pages ---------- */
+  var rep = { from: ymd(new Date(today.getFullYear(), today.getMonth(), 1)), to: ymd(today), mode: 'detail', q: '', wallet: '' };
+  function rangeTx() {
+    return state.tx.filter(function (t) { return t.date >= rep.from && t.date <= rep.to; })
+      .sort(function (a, b) { return a.date < b.date ? -1 : a.date > b.date ? 1 : (a.id < b.id ? -1 : 1); });
+  }
+  function sdate(s) { var d = parseYmd(s); return toBn(d.getDate()) + ' ' + MSHORT[d.getMonth()]; }
+  function delta(t, w) {
+    if (t.type === 'transfer') return (t.to === w ? t.amount : 0) - (t.wallet === w ? t.amount : 0);
+    if (t.wallet !== w) return 0;
+    return t.type === 'income' ? t.amount : -t.amount;
+  }
+  function tbl(heads, rows, foot) {
+    function cell(c, tag) { return '<' + tag + (c[1] ? ' class="' + c[1] + '"' : '') + '>' + c[0] + '</' + tag + '>'; }
+    if (!rows.length) return '<p class="muted">কোনো তথ্য পাওয়া যায়নি।</p>';
+    return '<div class="scroll-x"><table class="book"><thead><tr>' + heads.map(function (c) { return cell(c, 'th'); }).join('') + '</tr></thead><tbody>' +
+      rows.map(function (r) { return '<tr>' + r.map(function (c) { return cell(c, 'td'); }).join('') + '</tr>'; }).join('') +
+      (foot ? '<tr class="tot">' + foot.map(function (c) { return cell(c, 'td'); }).join('') + '</tr>' : '') + '</tbody></table></div>';
+  }
+  function bigCard(label, val, cls) { return '<section class="card bigcard"><div class="n">' + label + '</div><div class="bigv ' + (cls || '') + '">' + val + '</div></section>'; }
+  function renderRep() {
+    if (REPKEYS.indexOf(page) < 0) return;
+    var k = page;
+    if (WALLETS.indexOf(rep.wallet) < 0) rep.wallet = WALLETS[0];
+    var h = '<div class="print-head"><h2>টাকার খাতা — ' + TITLES[k] + (k === 'rbook' || k === 'rbank' ? ' (' + esc(rep.wallet) + ')' : '') + '</h2><p>' + shortDate(rep.from) + ' থেকে ' + shortDate(rep.to) + (user && user.displayName ? ' · ' + esc(user.displayName) : '') + '</p></div>';
+    h += '<section class="card no-print"><div class="grid2"><div class="field"><label for="rp-from">থেকে</label><input type="date" id="rp-from" value="' + rep.from + '"></div>' +
+      '<div class="field"><label for="rp-to">পর্যন্ত</label><input type="date" id="rp-to" value="' + rep.to + '"></div></div>';
+    if (k === 'rbook' || k === 'rbank') h += '<div class="field"><label for="rp-wallet">ওয়ালেট</label><select id="rp-wallet">' + WALLETS.map(function (w) { return '<option' + (w === rep.wallet ? ' selected' : '') + '>' + esc(w) + '</option>'; }).join('') + '</select></div>';
+    if (k === 'rinc' || k === 'rexp') h += '<div class="seg" role="group" aria-label="দেখার ধরন"><button type="button" data-rmode="summary" aria-pressed="' + (rep.mode === 'summary') + '">সারসংক্ষেপ</button><button type="button" data-rmode="detail" aria-pressed="' + (rep.mode === 'detail') + '">বিস্তারিত</button></div>';
+    if (k !== 'rfin') h += '<div class="field"><label for="rp-q">খুঁজুন</label><input type="text" id="rp-q" value="' + esc(rep.q) + '" placeholder="নাম, ক্যাটাগরি বা নোট" autocomplete="off"></div>';
+    h += '<button type="button" class="btn ghost" data-pdf="1">PDF সেভ বা প্রিন্ট করুন</button></section><div id="rp-body"></div>';
+    $('v-rep').innerHTML = h;
+    renderRepBody();
+  }
+  function catRows(list) {
+    var g = {}, tot = 0;
+    list.forEach(function (t) { g[t.cat] = (g[t.cat] || 0) + t.amount; tot += t.amount; });
+    return Object.keys(g).sort(function (a, b) { return g[b] - g[a]; }).map(function (c) { return [[esc(c)], [money(g[c]), 'r'], [toBn(Math.round(g[c] / tot * 100)) + '%', 'r']]; });
+  }
+  function renderRepBody() {
+    var el = $('rp-body');
+    if (!el) return;
+    var k = page, q = rep.q.trim().toLowerCase(), h = '', all = rangeTx();
+    function match(s) { return !q || s.toLowerCase().indexOf(q) >= 0; }
+    function card(title, inner) { return '<section class="card"><h2>' + title + '</h2>' + inner + '</section>'; }
+    if (k === 'rinc' || k === 'rexp') {
+      var type = k === 'rinc' ? 'income' : 'expense';
+      var list = all.filter(function (t) { return t.type === type; }).reverse();
+      var total = list.reduce(function (a, t) { return a + t.amount; }, 0);
+      h += bigCard(type === 'income' ? 'মোট আয়' : 'মোট ব্যয়', money(total), type === 'income' ? 'pos' : 'neg');
+      var rows;
+      if (rep.mode === 'summary') {
+        var g = {}, cnt = {};
+        list.forEach(function (t) { if (!match(t.cat)) return; g[t.cat] = (g[t.cat] || 0) + t.amount; cnt[t.cat] = (cnt[t.cat] || 0) + 1; });
+        rows = Object.keys(g).sort(function (a, b) { return g[b] - g[a]; }).map(function (c, i) { return [[toBn(i + 1)], [esc(c)], [toBn(cnt[c]), 'r'], [money(g[c]), 'r']]; });
+        h += card(type === 'income' ? 'আয়ের সারসংক্ষেপ' : 'ব্যয়ের সারসংক্ষেপ', tbl([['#'], ['ক্যাটাগরি'], ['সংখ্যা', 'r'], ['টাকা', 'r']], rows, [[''], ['মোট'], [''], [money(total), 'r']]));
+      } else {
+        rows = list.filter(function (t) { return match(t.cat + ' ' + t.note + ' ' + t.wallet); }).map(function (t, i) {
+          return [[toBn(i + 1)], [sdate(t.date)], [esc(t.cat) + (t.note ? '<small>' + esc(t.note) + '</small>' : '')], [esc(t.wallet)], [money(t.amount), 'r ' + (type === 'income' ? 'cr' : 'dr')]];
+        });
+        h += card(type === 'income' ? 'আয়ের বিবরণ' : 'ব্যয়ের বিবরণ', tbl([['#'], ['তারিখ'], ['ক্যাটাগরি'], ['ওয়ালেট'], ['টাকা', 'r']], rows, [[''], [''], ['মোট'], [''], [money(total), 'r']]));
+      }
+    } else if (k === 'rtr') {
+      var tl = all.filter(function (t) { return t.type === 'transfer'; }).reverse();
+      var tt = tl.reduce(function (a, t) { return a + t.amount; }, 0);
+      h += bigCard('মোট ট্রান্সফার', money(tt));
+      var trows = tl.filter(function (t) { return match(t.wallet + ' ' + t.to + ' ' + t.note); }).map(function (t, i) {
+        return [[toBn(i + 1)], [sdate(t.date)], [esc(t.wallet) + ' → ' + esc(t.to) + (t.note ? '<small>' + esc(t.note) + '</small>' : '')], [money(t.amount), 'r']];
+      });
+      h += card('ট্রান্সফারের বিবরণ', tbl([['#'], ['তারিখ'], ['কোথা থেকে → কোথায়'], ['টাকা', 'r']], trows, [[''], [''], ['মোট'], [money(tt), 'r']]));
+    } else if (k === 'rbook' || k === 'rbank') {
+      var w = rep.wallet, open = 0, running;
+      state.tx.forEach(function (t) { if (t.date < rep.from) open += delta(t, w); });
+      running = open;
+      var sin = 0, sout = 0, brow = [['', ''], ['', ''], ['পূর্বের জের'], ['', 'r'], ['', 'r'], [money(open), 'r']];
+      var brows = [];
+      all.forEach(function (t) {
+        var d = delta(t, w);
+        if (d === 0 && !(t.type === 'transfer' && (t.wallet === w || t.to === w))) return;
+        running += d;
+        var desc = t.type === 'transfer' ? (t.wallet === w ? 'ট্রান্সফার → ' + esc(t.to) : 'ট্রান্সফার ← ' + esc(t.wallet)) : esc(t.cat);
+        var text = desc + ' ' + t.note;
+        if (!match(text)) return;
+        if (d > 0) sin += d; else sout -= d;
+        brows.push([[sdate(t.date)], [desc + (t.note ? '<small>' + esc(t.note) + '</small>' : '')], [d > 0 ? money(d) : '', 'r cr'], [d < 0 ? money(-d) : '', 'r dr'], [money(running), 'r']]);
+      });
+      h += '<section class="card bigcard recv"><div class="n">বর্তমান ' + esc(w) + ' ব্যালেন্স</div><div class="bigv ' + (walletBal(w) < 0 ? 'neg' : 'pos') + '">' + money(walletBal(w)) + '</div></section>';
+      var openRow = [[''], ['পূর্বের জের'], [''], [''], [money(open), 'r']];
+      h += card(k === 'rbook' ? 'ক্যাশ বুক' : 'ব্যাংক বুক', tbl([['তারিখ'], ['বিবরণ'], ['জমা', 'r'], ['খরচ', 'r'], ['জের', 'r']], [openRow].concat(brows), [[''], ['মোট'], [money(sin), 'r'], [money(sout), 'r'], [money(running), 'r']]));
+    } else if (k === 'rfin') {
+      var inc = sum(all, 'income'), exp = sum(all, 'expense');
+      h += bigCard('উদ্বৃত্ত (আয় − ব্যয়)', money(inc - exp), inc - exp < 0 ? 'neg' : 'pos');
+      h += card('আয় ও ব্যয়', tbl([['বিবরণ'], ['টাকা', 'r']], [[['মোট আয়'], [money(inc), 'r cr']], [['মোট ব্যয়'], [money(exp), 'r dr']]], [['উদ্বৃত্ত'], [money(inc - exp), 'r']]));
+      var ir = catRows(all.filter(function (t) { return t.type === 'income'; })), er = catRows(all.filter(function (t) { return t.type === 'expense'; }));
+      h += card('আয় কোথা থেকে', tbl([['ক্যাটাগরি'], ['টাকা', 'r'], ['%', 'r']], ir));
+      h += card('খরচ কোথায়', tbl([['ক্যাটাগরি'], ['টাকা', 'r'], ['%', 'r']], er));
+      h += card('ওয়ালেটে এখন কত', tbl([['ওয়ালেট'], ['ব্যালেন্স', 'r']], WALLETS.map(function (x) { return [[esc(x)], [money(walletBal(x)), 'r']]; }), [['মোট'], [money(totalBal()), 'r']]));
+      var rv = 0, ow = 0;
+      state.loans.forEach(function (l) { var r = Math.max(0, loanRem(l)); if (l.dir === 'given') rv += r; else ow += r; });
+      h += card('দেনা/পাওনা', tbl([['বিবরণ'], ['টাকা', 'r']], [[['আমি পাবো'], [money(rv), 'r cr']], [['আমি দেবো'], [money(ow), 'r dr']]]));
+      h += '<section class="card"><h2>গত ছয় মাস</h2><div class="legend"><span><i style="background:var(--inc)"></i>আয়</span><span><i style="background:var(--exp)"></i>ব্যয়</span></div><div class="scroll-x">' + chartSvg() + '</div></section>';
+    }
+    el.innerHTML = h;
+  }
+  function renderNotice() {
+    var a = buildAlerts(true);
+    $('v-notice').innerHTML = '<section class="card"><h2>নোটিশ</h2>' + (a.length ? '<div class="alerts-flat">' + a.map(function (x) { return '<div class="al ' + x.c + '"><i></i><span>' + x.t + '</span></div>'; }).join('') + '</div>' : '<p class="muted">এখন কোনো নোটিশ নেই। সব ঠিক আছে।</p>') + '</section>';
   }
 
   /* ---------- shell ---------- */
@@ -1176,19 +1427,24 @@ const db = initializeFirestore(app, { localCache: persistentLocalCache({ tabMana
   }
   function renderAll() {
     renderHeader(); renderHome(); renderTx(); renderWallet(); renderLoan(); renderGoal();
-    renderBudget(); renderRec(); renderNotes(); renderCalc(); renderSettings(); renderReport();
+    renderBudget(); renderRec(); renderNotes(); renderCalc(); renderSettings(); renderReport(); renderRep(); renderNotice();
   }
   function setPage(p) {
     page = p;
     armedId = ''; loanPay = ''; goalPay = null; goalAdding = false; budgetEditing = false; goalEditId = null; noteEditId = null; listEdit = null; listMsg = {}; restoreArmed = false; wipeArmed = false;
-    Object.keys(TITLES).forEach(function (n) { $('v-' + n).hidden = n !== p; });
+    if (p === 'rbook') rep.wallet = WALLETS[0];
+    if (p === 'rbank') rep.wallet = WALLETS.indexOf('ব্যাংক') >= 0 ? 'ব্যাংক' : (WALLETS[1] || WALLETS[0]);
+    if (REPKEYS.indexOf(p) >= 0) rep.q = '';
+    personPay = '';
+    var pp = panelOf(p);
+    Object.keys(TITLES).forEach(function (n) { $('v-' + panelOf(n)).hidden = panelOf(n) !== pp; });
     var main = MAIN.indexOf(p) >= 0;
     $('back').hidden = main;
     $('logo').hidden = p !== 'home';
     $('kicker').hidden = p !== 'home';
-    $('ptitle').textContent = TITLES[p];
+    $('ptitle').textContent = p === 'person' ? personName : TITLES[p];
     $('months').hidden = SHOWMONTH.indexOf(p) < 0;
-    var nk = main ? p : 'home';
+    var nk = main ? p : (REPKEYS.indexOf(p) >= 0 ? 'report' : 'home');
     document.querySelectorAll('.nv[data-go]').forEach(function (b) {
       if (b.getAttribute('data-go') === nk) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current');
     });
@@ -1252,13 +1508,14 @@ const db = initializeFirestore(app, { localCache: persistentLocalCache({ tabMana
     }
     $('l-prev').textContent = p;
   }
-  function openLoan(id) {
+  function openLoan(id, pre) {
     armedId = ''; loanEditId = id || null;
     var l = id ? state.loans.filter(function (x) { return x.id === id; })[0] : null;
     $('loan-title').textContent = l ? 'ধার-বাকি বদলান' : 'নতুন ধার-বাকি';
-    (l && l.dir === 'taken' ? $('l-taken') : $('l-given')).checked = true;
+    (((l && l.dir === 'taken') || (!l && pre && pre.dir === 'taken')) ? $('l-taken') : $('l-given')).checked = true;
     $('l-kind').value = l ? (l.kind || 'cash') : (loanKind === 'recharge' ? 'recharge' : 'cash');
-    $('l-person').value = l ? l.person : '';
+    $('l-person').value = l ? l.person : ((pre && pre.person) || '');
+    $('l-phone').value = l ? (l.phone || '') : ((pre && pre.phone) || '');
     $('l-amount').value = l ? toBn(l.amount) : '';
     $('l-date').value = l ? (l.date || ymd(today)) : ymd(today);
     $('l-due').value = l ? (l.due || '') : '';
@@ -1294,7 +1551,7 @@ const db = initializeFirestore(app, { localCache: persistentLocalCache({ tabMana
     if (T.id === 'overlay') { closeSheet(); return; }
     if (T.id === 'overlay2') { closeLoan(); return; }
     if (T.id === 'overlay3') { closeRec(); return; }
-    if (T.closest('#back')) { setPage('home'); return; }
+    if (T.closest('#back')) { setPage(BACKTO[page] || 'home'); return; }
     if (T.closest('#fab')) { openSheet(); return; }
     if ((el = T.closest('[data-go]'))) {
       if (el.hasAttribute('data-fset')) setFilterType(el.getAttribute('data-fset'));
@@ -1302,6 +1559,23 @@ const db = initializeFirestore(app, { localCache: persistentLocalCache({ tabMana
       else if (el.getAttribute('data-go') === 'loan') loanKind = 'all';
       setPage(el.getAttribute('data-go')); return;
     }
+    if ((el = T.closest('[data-person]'))) { personName = el.getAttribute('data-person'); personPay = ''; setPage('person'); return; }
+    if ((el = T.closest('[data-rmode]'))) { rep.mode = el.getAttribute('data-rmode'); renderRep(); return; }
+    if (T.closest('[data-pdf]')) { try { window.print(); } catch (er) {} return; }
+    if ((el = T.closest('[data-new-type]'))) { openSheet(null, { type: el.getAttribute('data-new-type') }); return; }
+    if (T.closest('[data-pgot]')) {
+      var tg = personTotals(personName);
+      if (tg.recv > 0) { personPay = 'got'; renderPerson(); var pi1 = $('pp-input'); if (pi1) pi1.focus(); }
+      else openLoan(null, { person: personName, dir: 'taken', phone: tg.phone });
+      return;
+    }
+    if (T.closest('[data-pgive]')) {
+      var tv = personTotals(personName);
+      if (tv.owe > 0) { personPay = 'give'; renderPerson(); var pi2 = $('pp-input'); if (pi2) pi2.focus(); }
+      else openLoan(null, { person: personName, dir: 'given', phone: tv.phone });
+      return;
+    }
+    if (T.closest('[data-ppay-cancel]')) { personPay = ''; renderPerson(); return; }
     if ((el = T.closest('[data-lk]'))) { loanKind = el.getAttribute('data-lk'); renderLoan(); return; }
     if ((el = T.closest('[data-loan-edit]'))) { openLoan(el.getAttribute('data-loan-edit')); return; }
     if ((el = T.closest('[data-rec-edit]'))) { openRec(el.getAttribute('data-rec-edit')); return; }
@@ -1420,6 +1694,21 @@ const db = initializeFirestore(app, { localCache: persistentLocalCache({ tabMana
   });
 
   document.addEventListener('change', function (e) {
+    var rid = e.target && e.target.id;
+    if (rid === 'rp-from' || rid === 'rp-to' || rid === 'rp-wallet') {
+      if (rid === 'rp-from' && e.target.value) rep.from = e.target.value;
+      if (rid === 'rp-to' && e.target.value) rep.to = e.target.value;
+      if (rid === 'rp-wallet') rep.wallet = e.target.value;
+      if (rep.from > rep.to) { var sw = rep.from; rep.from = rep.to; rep.to = sw; }
+      renderRep(); return;
+    }
+  });
+  document.addEventListener('input', function (e) {
+    var rid = e.target && e.target.id;
+    if (rid === 'rp-q') { rep.q = e.target.value; renderRepBody(); }
+    else if (rid === 'pq') { personQ = e.target.value; $('plist').innerHTML = personListHtml(); }
+  });
+  document.addEventListener('change', function (e) {
     if (e.target.id === 'p-toggle') { state.all = e.target.checked; save(); renderHome(); }
   });
 
@@ -1463,6 +1752,11 @@ const db = initializeFirestore(app, { localCache: persistentLocalCache({ tabMana
         }
       }
       listEdit = null; listMsg = {}; applyLists(state); save(); renderAll();
+    } else if (f.hasAttribute('data-ppay-form')) {
+      e.preventDefault();
+      var pm = f.getAttribute('data-ppay-form'), pa = num($('pp-input').value);
+      if (!(pa > 0)) { $('pp-err').textContent = 'টাকার পরিমাণ লিখুন।'; $('pp-input').focus(); return; }
+      applyPersonPay(pm, pa); personPay = ''; save(); renderLoan(); renderHome();
     } else if (f.hasAttribute('data-pay-form')) {
       e.preventDefault();
       id = f.getAttribute('data-pay-form');
@@ -1569,7 +1863,7 @@ const db = initializeFirestore(app, { localCache: persistentLocalCache({ tabMana
     if (rt !== 'none' && !(rate > 0)) { $('l-err').textContent = 'সুদ বা চার্জের হার লিখুন।'; $('l-rate').focus(); return; }
     var o = {
       dir: document.querySelector('input[name="ldir"]:checked').value, kind: $('l-kind').value,
-      person: person, amount: r2(amt), date: $('l-date').value || ymd(today), rtype: rt, rate: rt === 'none' ? 0 : rate,
+      person: person, phone: $('l-phone').value.trim(), amount: r2(amt), date: $('l-date').value || ymd(today), rtype: rt, rate: rt === 'none' ? 0 : rate,
       due: $('l-due').value, note: $('l-note').value.trim()
     };
     if (loanEditId) {
