@@ -418,6 +418,15 @@ body{line-height:1.6;font-size:15.5px}
 #view-add .seg{grid-template-columns:repeat(3,1fr)!important}
 .sugg{display:flex;flex-wrap:wrap;gap:8px}
 .sugg button{border:1px dashed var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:6px 14px;font-family:inherit}
+
+.balc.pad{padding:12px 14px!important}
+.balc .big{font-size:24px!important;line-height:1.25!important}
+.balc .lbl{font-size:13px}
+.grps{margin-top:8px!important;gap:6px!important}
+.grp{padding:7px 8px!important;gap:2px!important}
+.grp .wi{width:22px!important;height:22px!important}.grp .wi svg{width:14px;height:14px}
+.grp .gt{font-size:11.5px!important}.grp b{font-size:12.5px!important}
+.balc .trio2{margin-top:8px!important;padding-top:6px!important}.balc .trio2 .v{font-size:14px}.balc .trio2 .k{font-size:12px}
 </style>
 
 <div id="auth-gate" class="auth-gate">
@@ -2286,6 +2295,8 @@ store.remove=function(id){
 };
 function init(){
   var db=firebase.firestore();
+  try{db.settings({experimentalAutoDetectLongPolling:true,merge:true})}catch(e){}
+  try{db.enablePersistence({synchronizeTabs:true}).catch(function(){})}catch(e){}
   store.mode='db';
   store.col=db.collection('cashbook/main/entries');
   store.shopDoc=db.doc('cashbook/shop');
@@ -2300,6 +2311,22 @@ function init(){
   var localEntries=loadLocal();
   var localShop=null;
   try{localShop=JSON.parse(localStorage.getItem(LS_SHOP)||'null')}catch(x){}
+  (function(){
+    store.col.onSnapshot(function(snap){
+    if(snap.metadata&&snap.metadata.fromCache&&snap.empty)return;
+    setRows(docsToRows(snap));state.dberr=false;
+    state.confirmed=true;state.slow=false;state.loaded=true;renderAll();runRecurring();
+  },function(err){
+    state.dberr=true;state.getErr=String(err&&err.code||'permission-denied');
+    state.loaded=true;renderAll();
+    if(err&&err.code==='permission-denied'){
+      $('#auth-error').textContent='এই Gmail-এর মালিকানা অনুমোদিত নয়। সঠিক আপনার অ্যাকাউন্ট দিয়ে প্রবেশ করুন।';
+      firebase.auth().signOut();
+    }
+  });
+  store.extraDoc.onSnapshot(function(d){applyExtra(d.exists?d.data():null);syncForm();renderAll();runRecurring()},function(){});
+  })();
+  setTimeout(function(){if(!state.loaded){state.loaded=true;renderAll()}},8000);
   return store.col.get().then(function(snap){
     if(snap.empty && localEntries.length){
       var batch=db.batch();
@@ -2312,18 +2339,6 @@ function init(){
     }
     return null;
   }).then(function(){
-    store.col.onSnapshot(function(snap){
-      setRows(docsToRows(snap));state.dberr=false;
-      state.confirmed=true;state.slow=false;state.loaded=true;renderAll();runRecurring();
-    },function(err){
-      state.dberr=true;state.getErr=String(err&&err.code||'permission-denied');
-      state.loaded=true;renderAll();
-      if(err&&err.code==='permission-denied'){
-        $('#auth-error').textContent='এই Gmail-এর মালিকানা অনুমোদিত নয়। সঠিক আপনার অ্যাকাউন্ট দিয়ে প্রবেশ করুন।';
-        firebase.auth().signOut();
-      }
-    });
-    store.extraDoc.onSnapshot(function(d){applyExtra(d.exists?d.data():null);syncForm();renderAll();runRecurring()},function(){});
     return refresh();
   }).then(function(){
     store.shopDoc.get().then(function(d){if(d.exists){applyShop(d.data());if(state.tab==='settings')renderSettings()}}).catch(function(){});
@@ -2426,7 +2441,7 @@ function renderNotices(){
 
 function renderHome(){
   var el=$('#view-home');
-  if(!state.loaded){el.innerHTML='';return}
+  if(!state.loaded){el.innerHTML='<div class="card empty">লোড হচ্ছে…</div>';return}
   var L=list(),ym=today().slice(0,7);
   var M=totals(L.filter(function(e){return e.date.slice(0,7)===ym}));
   var rows=sortEntries(L).slice(0,8);
